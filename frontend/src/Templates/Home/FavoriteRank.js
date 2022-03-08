@@ -11,7 +11,7 @@ function RankBlock(props) {
     const path = "/assets/" + content.creator + "/" + content.id ; 
     return (
         <Box           
-            ml = "10%"
+            ml = "5%"
             h = "100%"
             w = "30%"            
             bg = {bgcolor}
@@ -42,16 +42,17 @@ function FavoriteRank() {
     }, [])
 
     return (
-        <Box mt = "5%">
+        <Box mt = "1%"  w = "50%" >
             <Text fontSize="4xl"> Top Favorite </Text>
             <Flex
-                w="70%"
+                w="100%"
                 mt = "3%"
                 h= "400px"
                 borderRadius="2xl"
                 borderColor="black"     
                 borderStyle="solid"   
-                align = "center"                    
+                align = "left"                    
+               
             >
                 {
                     result == [] ? "" :

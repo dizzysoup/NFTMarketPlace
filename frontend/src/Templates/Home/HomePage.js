@@ -1,24 +1,28 @@
-import React  from "react";
-import {Box , Flex }  from "@chakra-ui/react";
+import React from "react";
+import { Box, Flex } from "@chakra-ui/react";
 import FavoriteRank from "./FavoriteRank";
-import Recommend  from "./Recommend";
+import Recommend from "./Recommend";
 import TopSales from "./TopSales";
 import TopCreator from "./TopCreator";
+import NowSaling from "./NowSaling";
 
 
 function HomePage() {
-    
-    return (
-        <Box m = "6%" w= "100%" h = "100%" >
+  return (    
+      <Box mt="1%" ml="5%" w="100%" h="100%" >
+        <Flex>
+          <NowSaling />
           <Recommend />
-          <FavoriteRank /> 
-          <Flex mt="5%" >
-            <TopSales />
-            <TopCreator />
-          </Flex>
+        </Flex>
+        <Flex>
+          <FavoriteRank />
+          <TopCreator />
+        </Flex>
+        <Box m="1%">
+          <TopSales />
         </Box>
-
-    );
+      </Box>    
+  );
 
 }
 

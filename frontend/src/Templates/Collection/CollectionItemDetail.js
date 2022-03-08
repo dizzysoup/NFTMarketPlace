@@ -1,11 +1,10 @@
-import React, { useState, useEffect , useContext } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { Text, Box, Image, Flex, Textarea, Button } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { InitContext } from '../../App';
+
 
 function Transaction(props) {
-    const content = props.content;
-
+    const content = props.content;   
     return (
         <Tr>
             <Td> {content.event}</Td>
@@ -32,7 +31,7 @@ function ChangePFP(props){
         body: JSON.stringify(data)
     })
         .then(function (res) {
-           console.log(res)
+          console.log(res);
         })
         .catch(function (res) { console.log(res) })   
 }

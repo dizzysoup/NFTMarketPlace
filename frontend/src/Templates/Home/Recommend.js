@@ -11,12 +11,12 @@ function RecommmendBlock(props) {
    
     return (
         <Flex
-            w="80%"
-            p="5%"            
-            ml = "10%"
-            mt = "3%"
+            w="90%"
+            p="4%"            
+            ml = "9%"
+            mt = "1%"
         >
-            <Box w="60%" align="left">
+            <Box w="70%" align="left">
                 <Text fontSize="3xl" > {content.title} </Text>
                 <Text fontSize="2xl" > Price : {content.price} ETH </Text>
                 <Text fontSize="2xl" > Topic : {content.topic} </Text>
@@ -39,6 +39,7 @@ function RecommmendBlock(props) {
             </Box>
             <Spacer />
             <Image
+                ml = "2%"
                 w="400px" h="400px"
                 borderRadius="1xl"
                 src={content.ipfs} />           
@@ -63,15 +64,17 @@ function Recommend() {
         infinite: true,
         speed: 500,
         slidesToShow: 1,
-        slidesToScroll: 1
+        slidesToScroll: 1,
+        autoplay : true , 
+        autoplaySpeed : 2000
     };
 
     return (
-        <Box>
-            <Text fontSize="4xl" > Recommend </Text>
+        <Box ml = "1%" w = '60%' h = "auto" bg = "gray.400" p = "1%" align="center">
+            <Text fontSize="4xl" align="left" ml = "5%"> Recommend </Text>
             <Box
-                h="600px"
-                w="80%"
+                h="550px"
+                w="1000px"
                 bg="pink"
                 align="center"                
             >

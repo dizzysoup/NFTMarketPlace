@@ -5,15 +5,20 @@ import NFTTitleBlock from "./NFTTitleBlock";
 function NFTList(props) {
     const [result, setResult] = useState([]);
     const topic = props.topic ;     
-    const url = 'http://192.168.31.7:8000/api/nft_title/?topic=' + topic;
+
+    //目前NFT分類狀態
+    const status = props.status[0] && props.status[1] ? 0 : props.status[0] ? 1 : props.status[1] ? 2 : 3 ;     
+
+    const url = 'http://192.168.31.7:8000/api/nft_title/?topic=' + topic + '&status=' + status;
     
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(res => {
+                console.log(res);                
                 setResult(res);
             })
-    }, [topic])
+    }, [topic,status])
     return (
         <SimpleGrid
                 bg="gray.400"               

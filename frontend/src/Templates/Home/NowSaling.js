@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Text, Box, Image } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Text, Box, Flex, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import AddressIcon from "../../Components/AddressIcon";
 
-function SalesBlock(props) {
+
+function SalingBlock(props) {
     const [hid, SetHidden] = useState(1);
-
     const content = props.content;
     const link = "/assets/" + content.creator + "/" + content.id;
     const history = useHistory();
-
-
     return (
-        <Box w = "600px" h = "600px" >
-            <Box
-                border="3px solid black "
+        <Box w="500px" h="500px" >
+            <Box                
                 borderRadius="2xl"
-                w="600px"
+                w="500px"
                 position="absolute"
                 cursor="pointer"
                 p="2%"
-                bg="gray.300"
+                bg="brown"
                 onMouseEnter={() => SetHidden(-hid)}
             >
-                <Image w="600px" h="auto" src={content.ipfs} />
+                <Image w="500px" h="auto" src={content.ipfs} />
             </Box>
             <Box
-                w="600px"
-                h="600px"
+                w="500px"
+                h="500px"
                 position="absolute"
                 borderRadius="2xl"
                 cursor="pointer"
@@ -39,36 +37,33 @@ function SalesBlock(props) {
 
             >
                 <Text fontSize="5xl" color="white" > {content.title}</Text>
-                <Text fontSize="2xl" color="white" > {content.creator.slice(0, 6)}</Text>
+                <Text fontSize="2xl" color="white" > { content.creator == undefined ? "" : content.creator.slice(0, 6)}</Text>
                 <Text fontSize="1xl" color="white" > {content.description} </Text>
             </Box>
         </Box>
     );
-
 }
 
-function TopSales() {
-    const [result, SetResult] = useState(null);
-
-    const url = "http://192.168.31.7:8000/api/hot_nft";
+function NowSaling() {
+    const [result, setResult] = useState([]);
+    const topic = '';
+    const url = 'http://192.168.31.7:8000/api/nft_title/?topic=' + topic + '&status=0'
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
-            .then(res => SetResult(res))
-    }, []);
+            .then(res => {
+                setResult(res[0]);
+            })
+    }, [])
 
     return (
-        <Box w = "600px">
-            <Text fontSize="4xl" > Hot NFT  </Text>
-            {
-                result == null ? "" :
-                    result.map((res, index) => {
-                        return <SalesBlock key={index} content={res} />
-                    })
-            }
+        <Box w = '30%' h = "auto" >
+            <Text fontSize="4xl">
+                New NFT !
+            </Text>
+            { result == [] ? "" : <SalingBlock content={result} /> }           
         </Box>
-
     );
 }
 
-export default TopSales; 
+export default NowSaling

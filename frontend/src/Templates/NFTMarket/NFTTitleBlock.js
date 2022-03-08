@@ -147,9 +147,12 @@ function NFTTitleBlock(props) {
                             onMouseEnter={() => { SetHeart(true) }}
                             onMouseLeave={() => { SetHeart(false) }}
                             onClick={() => Click()}
-                        />
+                        />                                  
                     </Box>
+                              
                     <Text fontSize="2xl" ml="2.5%"> {count} </Text>
+                    <Spacer />
+                    <Text fontSize="2xl" mr = "10%"> 剩餘 : { content.num - content.saled} </Text> 
                 </Flex>
             </Box>
         </label>

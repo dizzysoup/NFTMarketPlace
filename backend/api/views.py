@@ -50,18 +50,32 @@ def nft_select(request):
         cursor.close()
     return Response(result , status=status.HTTP_200_OK)
 
-# 撈取所有NFT 產品 + filter 條件
+# 撈取所有NFT 產品 + filter 條件 ( 分類、狀態 )
 @api_view(['GET'])
 def nft_title(request):
     try :
-        topic = request.GET.get("topic")
+        topic = request.GET.get("topic")       
+        statuscode = request.GET.get('status') 
+
+        if (statuscode == '0' ) : statusfilter = '> -1' 
+        elif (statuscode== '1') : statusfilter = '> 0' 
+        elif (statuscode== '2' ) : statusfilter = '= 0'
+        else : statusfilter = '< -1'
+
         if topic == "" : topic = "%%"
         query = '''
-            select *from nft_t where topic like %s order by date desc 
+            select *from (
+                select n.* , count(t.id) -1  as saled from nft_t n 
+                inner join 
+                transaction_t t 
+                on n.id = t.nft_id  and n.topic like %s
+                group by n.id ) a 
+            where num - saled ''' + statusfilter + '''
+             order by date desc 
         '''
-        cursor = connection.cursor()        
-        cursor.execute(query,[topic])
-        data = cursor.description      
+        cursor = connection.cursor()             
+        cursor.execute(query,[topic])        
+        data = cursor.description             
         rows = cursor.fetchall()
         result =  [dict(zip([column[0] for column in data], row))
                 for row in rows]

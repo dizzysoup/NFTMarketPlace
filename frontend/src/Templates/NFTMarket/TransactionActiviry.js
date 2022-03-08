@@ -21,12 +21,12 @@ async function DeployedEvent(props) {
     const no = props.no;
     const event = await contract.getPastEvents('Success', eventOption);
     let table = [];
-    for (let i = 0; i < event.length; i++) {
+    for (let i = 0; i < event.length; i++) {       
         const val = event[i].returnValues; // 合約回傳的emit
-        const blocknumber = event[i].blockNumber; //所在的block        
+        const blocknumber = event[i].blockNumber; //所在的block 
         // 驗證
         if (val["ID"] == no && val["CreateHash"] == creator) {
-            const block = await getBlock(blocknumber, true); //取得該區塊所有資訊            
+            const block = await getBlock(blocknumber, true); //取得該區塊所有資訊    
             if (block.transactions[0] !== undefined) {
                 const _date = new Date(block.timestamp * 1000);
                 const date = _date.getFullYear() + " / " + (_date.getMonth() + 1) + " / " + (_date.getDate());
