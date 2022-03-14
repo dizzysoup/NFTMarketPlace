@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 
 function DescriptionBlock(props) {
     const result = props.result
+   
     const link = "/AccountPage/Collection/" + result.creator;
 
     return (
@@ -138,13 +139,15 @@ function TransactionBlock(props) {
 }
 
 function ProductDetailPage(props) {
-    const no = props.match.params.id // 編號 ( 記錄在url 上 )   
+    const no = props.match.params.id // 編號 ( 記錄在url 上 )  
+    
     const connstr = 'http://192.168.31.7:8000/api/select?id=' + no
     const [result, setResult] = useState(null);
     useEffect(() => {
         fetch(connstr, { method: "GET" })
             .then(res => res.json())
             .then(data => {
+                console.log(data)
                 setResult(data[0]);
             })
             .catch(e => { console.log(e) })

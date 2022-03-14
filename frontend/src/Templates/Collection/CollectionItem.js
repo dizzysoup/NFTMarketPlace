@@ -7,7 +7,7 @@ import CollectionItemDetail from "./CollectionItemDetail" ;
 async function CollectCheck(account){
     const contract = getContract();    
     const eventOption = {fromBlock : 0 };
-    const event = await contract.getPastEvents("BuySuccess", eventOption); // 
+    const event = await contract.getPastEvents("BuySuccess", eventOption);
 
     let logtable = [];
     for(let i = 0 ; i < event.length ; i++){        
@@ -18,6 +18,8 @@ async function CollectCheck(account){
     }
     return logtable ;    
 }
+
+
 
 async function CollectionTable(account){
     const url = "http://192.168.31.7:8000/api/collection/?account=" + account ; 
@@ -34,7 +36,7 @@ function CollectionItem(props){
     const [ result , SetResult ] = useState([]);
     const account = props.account ;    
     
-    useEffect(async() =>{        
+    useEffect(async() =>{                
         const logtable = await CollectCheck(account);         
         const databasetable = await CollectionTable(account);
         let resultatable = [];
@@ -74,8 +76,8 @@ function CollectionItem(props){
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-    };
-    
+    };   
+
     return result.length == 0 ? (
         <Text 
             fontSize="5xl"       

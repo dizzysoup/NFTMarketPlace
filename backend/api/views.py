@@ -21,7 +21,9 @@ def nft_select(request):
 
     if creator == None :
         query = '''
-          select n.* , m.* , (n.num - c.count +1 ) as sale from 
+          select n.* , 
+            m.address, m.name  , m.interduction,m.email , m.PFP 
+            , (n.num - c.count +1 ) as sale from 
             nft_t n 
             inner join 
             member_t m 
@@ -553,11 +555,7 @@ def topcreator(request):
     try :
         cursor = connection.cursor()
         query = '''
-            select distinct *,rank() over ( order by nft_id desc ) as seq from nft_t n , member_t m ,
-	        (select nft_id , count(*) as count
-            from transaction_t group by nft_id order by count(*) desc limit 10 ) t 
-		    where n.creator = m.address and t.nft_id = n.id
-            order by count desc ;
+           select creator,count(*) from nft_t n group by creator order by creator desc ; 
         '''
         cursor.execute(query)
         data = cursor.description 

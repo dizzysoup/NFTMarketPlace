@@ -11,8 +11,6 @@ function PersonalProfile(props) {
     const [date, setDate] = useState();
     const [pfp, setPFP] = useState();
     const contextData = useContext(InitContext);
-
-
     const etherBalance = props.etherBalance;
     const connstr = 'http://192.168.31.7:8000/login?account=' + account;
     useEffect(() => {
@@ -81,7 +79,8 @@ function AccountLayout(props) {
                         h="50px"
                     >
                         <Flex justifyContent="ceneter">
-                            <HStack spacing="24px" m="1.5" >
+                            <HStack spacing="24px" m="1.5">
+                                
                                 <Link to={accountlink}>
                                     <Button bg="gray.300" w="150px" color="gray.600">
                                         Collection

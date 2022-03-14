@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Text, Box, Flex, Image } from "@chakra-ui/react";
+import { Text, Box, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import AddressIcon from "../../Components/AddressIcon";
+
 
 
 function SalingBlock(props) {
@@ -45,13 +45,14 @@ function SalingBlock(props) {
 }
 
 function NowSaling() {
-    const [result, setResult] = useState([]);
+    const [result, setResult] = useState(null);
     const topic = '';
     const url = 'http://192.168.31.7:8000/api/nft_title/?topic=' + topic + '&status=0'
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(res => {
+                console.log(res)
                 setResult(res[0]);
             })
     }, [])
@@ -61,7 +62,7 @@ function NowSaling() {
             <Text fontSize="4xl">
                 New NFT !
             </Text>
-            { result == [] ? "" : <SalingBlock content={result} /> }           
+            { result == null ? "" : <SalingBlock content={result} /> }    
         </Box>
     );
 }

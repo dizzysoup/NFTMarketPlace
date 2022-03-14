@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { Text, Box, Flex, Checkbox, Stack } from "@chakra-ui/react";
+import { Text, Box, Flex, Checkbox, Select } from "@chakra-ui/react";
 import { Collapse, useDisclosure } from "@chakra-ui/react";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import NFTList from "./NFTList";
@@ -51,7 +51,10 @@ function MarketPage() {
             <Flex h="100%" w="95%" mt="1%"  >
                 <Box bg="gray.400" w="20%" h="100%" p="1%" >
                     <Box {...boxstyle} >
-                        <Text fontSize="3xl" > Filter </Text>
+                       {/* <Select placeholder = 'Order by '>
+                           <option value = 'time'> Deployed Time  </option>
+                        </Select> */}
+                        <Text fontSize="3xl" > Filter </Text>                        
                     </Box>
                     <Box>
                         <Box {...boxstyle}

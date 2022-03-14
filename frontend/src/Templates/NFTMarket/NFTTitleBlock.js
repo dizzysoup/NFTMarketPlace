@@ -13,7 +13,7 @@ function NFTTitleBlock(props) {
   
     const content = props.content;
    
-    const id = content.id;
+    const id = content.id;    
     const ipfs = content.ipfs;
     const title = content.title;
     const price = content.price;
