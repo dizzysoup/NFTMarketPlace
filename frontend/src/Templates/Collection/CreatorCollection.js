@@ -24,9 +24,8 @@ function CreatorCollection(props) {
     const account = props.account;
 
     useEffect(async () => {
-        const logtable = await CreatorNFT(account);
+        const logtable = await CreatorNFT(account);        
         SetResult(logtable);
-
     }, [account])
 
     return (

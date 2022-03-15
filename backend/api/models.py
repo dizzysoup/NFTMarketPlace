@@ -86,7 +86,6 @@ class Collection(models.Model):
     class Meta : 
         db_table = 'Collection_t'
 
-
 #喜愛度資料表
 class Favorate(models.Model):
     address = models.TextField(null = False) #帳戶
@@ -94,3 +93,12 @@ class Favorate(models.Model):
     
     class Meta:
         db_table = "Favorite_t"
+
+#轉賣資料表
+class Resell(models.Model):
+    address = models.TextField(null = False) #轉賣帳戶
+    nft_id = models.IntegerField() # 轉賣的nft_id
+    price = models.FloatField() #轉賣價格
+
+    class Meta :
+        db_table = "Resell_t"

@@ -75,7 +75,8 @@ class Layout extends React.Component {
     return (
       <Box 
         w = "100%" h = "100%" 
-        overflow="auto" 
+        overflowX="hidden"
+        overflowY="auto"
         position="fixed"        
         >
         <Flex

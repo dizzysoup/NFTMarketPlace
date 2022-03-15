@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 
@@ -19,7 +20,8 @@ contract NFTProduct {
         CreateHash = msg.sender ;
     }
 
-
+    
+    // 發布NFT
     function DeployedNFT(string memory _title , uint256 _price , int128 _num , string memory _type , int16 _roy ,string memory _ipfs , string memory _des  , string memory _lik )  public   
     {
         ID ++ ; 
@@ -34,7 +36,8 @@ contract NFTProduct {
         Link = _lik ; 
         emit Success(ID, msg.sender, _price ,_num, _title , _type , _roy ,_ipfs , _des , _lik );
     }
-
+    
+    // 購買NFT
     function BuyNFT(address payable _creator, string memory _ipfs , uint256 _price, int128 _id  ) payable  public {    
         UserHash = msg.sender ;  
         emit BuySuccess(msg.sender,_creator , _ipfs , _price , _id );

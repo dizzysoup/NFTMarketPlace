@@ -2,8 +2,9 @@ import { Flex, Text, Box, Button, HStack, Image } from "@chakra-ui/react";
 import AddressIcon from "../../Components/AddressIcon";
 import { formatEther } from '@ethersproject/units'
 import { Link } from "react-router-dom";
-import React, { useEffect, useState , useContext } from "react";
-import { InitContext } from "../../App" ;
+import React, { useEffect, useState, useContext } from "react";
+import { InitContext } from "../../App";
+import { useEthers } from "@usedapp/core";
 
 function PersonalProfile(props) {
     const account = props.account;
@@ -22,7 +23,7 @@ function PersonalProfile(props) {
                 setPFP(data[0].PFP)
             })
             .catch(e => { console.log(e) })
-    }, [contextData.reload])
+    }, [contextData.reload, account])
 
     return <Flex
         mt="5"
@@ -59,12 +60,16 @@ function PersonalProfile(props) {
 
 
 function AccountLayout(props) {
+    const { activateBrowserWallet, account: useraccount } = useEthers()
+
     const account = props.account;
     const etherBalance = props.etherBalance;
     const accountlink = "/AccountPage/Collection/" + account;
     const createlink = "/AccountPage/Create/" + account;
     const transactionlink = "/AccountPage/Transaction/" + account;
-    const favoritelink = "/AccountPage/Favorite/" + account ;
+    const favoritelink = "/AccountPage/Favorite/" + account;
+    const reselllink = "/AccountPage/Resell/" + account ; 
+
     return (
         <Box>
             <Box h="290px" bg="gray.200">
@@ -72,36 +77,31 @@ function AccountLayout(props) {
                     <PersonalProfile account={account} etherBalance={etherBalance} />
                 </Flex>
             </Box>
-            <Box h="30px"  >
-                <Flex justifyContent="center">
-                    <Box
-                        w="830px"
-                        h="50px"
-                    >
-                        <Flex justifyContent="ceneter">
-                            <HStack spacing="24px" m="1.5">
-                                
-                                <Link to={accountlink}>
-                                    <Button bg="gray.300" w="150px" color="gray.600">
-                                        Collection
-                                    </Button>
-                                </Link>
-                                <Link to={createlink}>
-                                    <Button bg="gray.300" w="150px" color="gray.600">
-                                        Create
-                                    </Button>
-                                </Link>
-                                <Link to={transactionlink} >
-                                    <Button bg="gray.300" w="150px" color="gray.600"> Transaction  </Button>
-                                </Link>
-                                <Link to={ favoritelink }>
-                                    <Button bg="gray.300" w="150px" color="gray.600"> Favorite </Button>
-                                </Link>
-                            </HStack>
-                        </Flex>
-                    </Box>
-                </Flex>
-            </Box>
+            <Flex justifyContent="center" h="30px" align="center" mt ="1.5%" >
+                <HStack spacing="24px" m="1.5">
+                    <Link to={accountlink}>
+                        <Button bg="gray.300" w="150px" color="gray.600">
+                            Collection
+                        </Button>
+                    </Link>
+                    {useraccount !== account ? "" :
+                        <Link to={createlink}>
+                            <Button bg="gray.300" w="150px" color="gray.600">
+                                Create
+                            </Button>
+                        </Link>
+                    }
+                    <Link to={transactionlink} >
+                        <Button bg="gray.300" w="150px" color="gray.600"> Transaction  </Button>
+                    </Link>
+                    <Link to={favoritelink}>
+                        <Button bg="gray.300" w="150px" color="gray.600"> Favorite </Button>
+                    </Link>
+                    <Link to = {reselllink}>
+                        <Button bg="gray.300" w="150px" color="gray.600"> Resell </Button>
+                    </Link>
+                </HStack>
+            </Flex>
         </Box>
     );
 }

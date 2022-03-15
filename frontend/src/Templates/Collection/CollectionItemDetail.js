@@ -2,18 +2,20 @@ import React, { useState, useEffect , useContext } from 'react';
 import { Text, Box, Image, Flex, Textarea, Button } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { InitContext } from '../../App';
+import { Link } from 'react-router-dom';
 
 
 function Transaction(props) {
-    const content = props.content;
-
-   
-
+    const content = props.content; 
     return (
         <Tr>
             <Td> {content.event}</Td>
             <Td> {content.price} </Td>
-            <Td> {content.fromaddress.slice(0, 6)}</Td>
+            <Td color = "blue" textDecoration="underline" title = {content.fromaddress} >  
+                <Link to = {"/AccountPage/Collection/" + content.fromaddress }>
+                    {content.fromaddress.slice(0, 6)}
+                </Link>
+            </Td>
             <Td> {content.toaddress == "SmartContract" ? "SmartContract" : content.toaddress.slice(0, 6)}</Td>
             <Td> {content.date}</Td>
         </Tr>
@@ -78,7 +80,7 @@ function CollectionItemDetail(props) {
                 <Box w="100%" ml="6%"  >
                     <Flex>
                         <Text fontSize="5xl" mt="3%"> {content.title}  </Text>
-                        {ChangeBtn}
+                        {ChangeBtn}                       
                     </Flex>
                     <Box align = "left" >
                         <Text fontSize="2xl" mt="2%" > Topic : {content.topic} </Text>

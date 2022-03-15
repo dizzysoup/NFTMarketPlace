@@ -1,4 +1,4 @@
-import React, { useState, Component, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Text, Box, Button  } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
@@ -27,7 +27,6 @@ function TransactionTable(props) {
 function TransactionPage(props) {
     const [result, SetResult] = useState([]);
     const account = props.account ;
-   
 
     useEffect(() => {
         const url = 'http://192.168.31.7:8000/api/trans_account/?account=' + account;
@@ -43,8 +42,7 @@ function TransactionPage(props) {
             w="100%"
             h="100%"
             bg="gray.600"
-            mt="1.5%"
-            position="fixed"
+            mt="1%"           
         >
             <Box align = "center" >
                 <Text
@@ -56,7 +54,7 @@ function TransactionPage(props) {
             <Box ml="20%" w = "60%" mt = "2%">                
                 <Table size="md" color="white" >
                     <Thead>
-                        <Tr   >
+                        <Tr>
                             <Th color="white" > Event </Th>
                             <Th color="white" > Price </Th>
                             <Th color="white" > From </Th>

@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 import heart from "../../Images/Icon/heart02.png";
 import { useEthers } from "@usedapp/core";
 
-
 function NFTTitleBlock(props) {
     const [hearticon, SetHeart] = useState(false);
     const [btnclick, SetClick] = useState(false);
     const { account, connectWallet } = useEthers();
     const [count, SetCount] = useState(0);
-  
+
     const content = props.content;
    
     const id = content.id;    
@@ -20,7 +19,6 @@ function NFTTitleBlock(props) {
     const creator = content.creator;
     const date = content.date;
     const link = content === undefined ? "" : "/assets/" + creator + "/" + id;
-
    
     const url = "http://192.168.31.7:8000/api/favorite_count/?id=" + id;
     const hearturl = "http://192.168.31.7:8000/api/favorite_chk/?id=" + id +"&&account=" + account ;
@@ -121,7 +119,7 @@ function NFTTitleBlock(props) {
                             Creator :
                         </Text>
                         <Spacer />
-                        <Text fontSize="1xl">
+                        <Text fontSize="1xl" title = {creator}>
                             {creator && `${creator.slice(0, 6)}...${creator.slice(
                                 creator.length - 4,
                                 creator

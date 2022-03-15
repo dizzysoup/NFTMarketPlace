@@ -1,4 +1,5 @@
 from asyncio import constants
+from audioop import add
 from curses import curs_set
 from dis import findlinestarts
 import re
@@ -12,7 +13,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status , viewsets
 from rest_framework.response import Response
 import api
-from api.models import NFTProduct
+from api.models import NFTProduct , Resell , Collection
 
 @api_view(['GET'])
 def nft_select(request):    
@@ -589,3 +590,59 @@ def hotnft(request):
     
     return Response(result , status = status.HTTP_200_OK)
 
+
+# 一個NFT的ETH總和
+@api_view(['GET'])
+def totallynft(request):
+    try : 
+        id = request.GET.get('id')
+        
+        query = '''
+            select *from transaction_t t ,
+                (select (case when sum(price) is null then 0 else sum(price) end ) as totally  
+                    , nft_id from transaction_t where nft_id = %s and event != 'Minted') _t
+            where t.nft_id  = %s
+        '''
+        cursor = connection.cursor()
+        cursor.execute(query, [str(id), str(id)])
+        data = cursor.description 
+        rows = cursor.fetchall()
+        result = [dict(zip([column[0] for column in data],row))
+            for row in rows]
+    finally : 
+        cursor.close()
+    
+    return Response(result , status = status.HTTP_200_OK)
+
+# 轉賣紀錄
+@api_view(['GET','POST','DELETE'])
+def resell(request):
+    try :
+        cursor = connection.cursor()
+        if request.method == "POST" :            
+            data = request.data 
+            result = data
+            Resell.objects.create(
+                address = data["address"] , nft_id = data["nft_id"] , price = data["price"]
+            )
+            Collection.objects.filter(address = data["address"] , nft_id = data["nft_id"]).delete()
+        elif request.method == "GET" : 
+            query = '''
+                select n.*, r.price,r.address from nft_t n  , resell_t r  
+	            where n.id = r.nft_id and r.address= %s ; 
+            '''
+            address = request.GET.get("address")
+            cursor.execute(query , [address])
+            data = cursor.description 
+            rows = cursor.fetchall()
+            result = [dict(zip([column[0] for column in data],row))
+                for row in rows]
+        elif request.method == "DELETE" :
+            data = request.data 
+            result = data
+            Resell.objects.filter(address = data["address"], nft_id = data["nft_id"] , price = data["price"]).delete()
+            Collection.objects.create(address = data["address"] , nft_id = data["nft_id"])
+    finally :
+        cursor.close()
+
+    return Response(result , status = status.HTTP_200_OK)

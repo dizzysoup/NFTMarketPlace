@@ -6,6 +6,7 @@ import CollectionPage  from "../Collection/CollectionPage" ;
 import CreatePage from "../DeployedNFT/CreatePage" ;
 import TransactionPage from "../Transaction/TransactionPage";
 import FavoritePage from "../Favorite/FavoritePage";
+import ResellPage from "../Resell/ResellPage";
 import { useEtherBalance } from "@usedapp/core";
 
 function AccountPage(){        
@@ -26,10 +27,17 @@ function AccountPage(){
             break ;        
         case "Favorite" :
             children = <FavoritePage account = { account } /> ; 
+            break;
+        case "Resell" :
+            children = <ResellPage account = {account } /> ; 
     }
    
     return(
-        <Box >
+        <Box 
+            w = "100%"
+            h = "100%"
+            position="relative"
+        >
             <AccountLayout account = { account } etherBalance = { etherBalance } />            
             { children }
         </Box>
