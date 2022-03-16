@@ -1,16 +1,17 @@
-import React , { useRef } from "react";
+import React , { useRef , useContext } from "react";
 import { Button } from "@chakra-ui/react";
 import { getContract } from "../../hook/NFTSmartContract";
 import { useEthers } from "@usedapp/core";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import {InitContext } from "../../App" ;
 
 export default function BuyButton(val){
     const { ConnectWallet , account } = useEthers();
     const contract = getContract(); // 取得contract 
     const connstr = "http://192.168.31.7:8000/api/trans" ; 
     const history = useHistory();
-
+    const contextdata = useContext(InitContext);
     const accountlist = "/AccountPage/Collection/" + account ; 
    
     const toast = useToast();
@@ -25,7 +26,8 @@ export default function BuyButton(val){
         "id" : val.id
     }
 
-    function Buy(){             
+    function Buy(){     
+                
         contract.methods.BuyNFT(val.creator , val.ipfsHash , val.price , val.id).send({
             from : account ,
             to: val.creator,
@@ -54,7 +56,8 @@ export default function BuyButton(val){
                     body : JSON.stringify(postdata)
                 })
                 .then( res => {
-                    history.push(accountlist)
+                    contextdata.SetReLoad(contextdata.reload + 1 )
+                    history.push(accountlist)                    
                 })
             };
         })

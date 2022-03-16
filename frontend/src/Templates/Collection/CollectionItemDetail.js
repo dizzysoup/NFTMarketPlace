@@ -13,18 +13,20 @@ function Transaction(props) {
             <Td> {content.price} </Td>
             <Td color = "blue" textDecoration="underline" title = {content.fromaddress} >  
                 <Link to = {"/AccountPage/Collection/" + content.fromaddress }>
-                    {content.fromaddress.slice(0, 6)}
+                    {content.fromaddress == "SmartContract" ? "SmartContract" : content.fromaddress.slice(0, 12)}
                 </Link>
             </Td>
-            <Td> {content.toaddress == "SmartContract" ? "SmartContract" : content.toaddress.slice(0, 6)}</Td>
+            <Td color = "blue" textDecoration="underline" title = {content.toaddress} >
+                <Link to = {"/AccountPage/Collection/" + content.toaddress }> 
+                    {content.toaddress.slice(0, 12)}
+                </Link>
+            </Td>
             <Td> {content.date}</Td>
         </Tr>
     );
 }
 
 function ChangePFP(props) {
-    
-
     const data = {
         "ipfs": props.ipfs,
         "account": props.address

@@ -43,6 +43,7 @@ function ResellBtn(address , id , price){
        nft_id : id , 
        price : price 
    }
+
    const url = "http://192.168.31.7:8000/api/resell/";
    fetch(url, {
     headers: {

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext } from 'react';
 import { Text} from "@chakra-ui/react";
 import { getContract } from '../../hook/NFTSmartContract';
 import Slider from 'react-slick';
 import CollectionItemDetail from "./CollectionItemDetail" ; 
+import { InitContext } from "../../App" ;
 
 async function CollectCheck(account){
     const contract = getContract();    
@@ -19,8 +20,6 @@ async function CollectCheck(account){
     return logtable ;    
 }
 
-
-
 async function CollectionTable(account){
     const url = "http://192.168.31.7:8000/api/collection/?account=" + account ; 
     let collecttable = [];
@@ -31,10 +30,10 @@ async function CollectionTable(account){
     return collecttable
 }
 
-
 function CollectionItem(props){
     const [ result , SetResult ] = useState([]);
     const account = props.account ;    
+    const contextdata = useContext(InitContext);
     
     useEffect(async() =>{                
         const logtable = await CollectCheck(account);         
@@ -56,7 +55,7 @@ function CollectionItem(props){
             SetResult(null);
         else 
             SetResult(resultatable);
-    },[account]);
+    },[account,contextdata.reload]);
 
     const settings = {
         customPaging: i => (

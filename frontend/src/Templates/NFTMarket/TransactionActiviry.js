@@ -30,7 +30,7 @@ async function DeployedEvent(props) {
             if (block.transactions[0] !== undefined) {
                 const _date = new Date(block.timestamp * 1000);
                 const date = _date.getFullYear() + " / " + (_date.getMonth() + 1) + " / " + (_date.getDate());
-                table = trans_table("Minted", val["Price"], creator, "SmartContract", date);
+                table = trans_table("Minted", val["Price"], "SmartContract",creator, date);
             }
         }
     }

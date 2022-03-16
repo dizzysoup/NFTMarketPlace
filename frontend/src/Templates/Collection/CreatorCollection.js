@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext } from "react";
 import { Text, Box, SimpleGrid } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import CollectionCreatorList from "./CollectionCreatorList";
 import { getContract } from '../../hook/NFTSmartContract';
+import {InitContext } from "../../App" ;
 
 async function CreatorNFT(account) {
     const contract = getContract();
@@ -23,10 +24,12 @@ function CreatorCollection(props) {
     const [result, SetResult] = useState([]);
     const account = props.account;
 
+    const contextdata = useContext(InitContext);
+
     useEffect(async () => {
         const logtable = await CreatorNFT(account);        
         SetResult(logtable);
-    }, [account])
+    }, [account, contextdata.reload])
 
     return (
         <Box w="100%" h="100%">

@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status , viewsets
 from rest_framework.response import Response
 import api
-from api.models import NFTProduct , Resell , Collection
+from api.models import NFTProduct , Resell , Collection , Transaction
 
 @api_view(['GET'])
 def nft_select(request):    
@@ -556,7 +556,11 @@ def topcreator(request):
     try :
         cursor = connection.cursor()
         query = '''
-           select creator,count(*) from nft_t n group by creator order by creator desc ; 
+           select creator,m.name,m.PFP,count(*) from nft_t n 
+            left join
+            member_t m
+            on n.creator = m.address
+            group by creator order by creator desc ; 
         '''
         cursor.execute(query)
         data = cursor.description 
@@ -615,7 +619,7 @@ def totallynft(request):
     return Response(result , status = status.HTTP_200_OK)
 
 # 轉賣紀錄
-@api_view(['GET','POST','DELETE'])
+@api_view(['GET','POST','DELETE','PUT'])
 def resell(request):
     try :
         cursor = connection.cursor()
@@ -642,6 +646,14 @@ def resell(request):
             result = data
             Resell.objects.filter(address = data["address"], nft_id = data["nft_id"] , price = data["price"]).delete()
             Collection.objects.create(address = data["address"] , nft_id = data["nft_id"])
+        elif request.method == "PUT" :
+            data = request.data
+            result = data   
+            Resell.objects.filter(address = data["fromaddress"] , nft_id = data["nft_id"] , price = data["price"]).delete()
+            Collection.objects.create(address = data["to"] , nft_id = data["nft_id"])
+            Transaction.objects.create(event = data["event"], price = data["price"] , fromaddress = data["fromaddress"],
+                toaddress = data["to"], nft_id = data["nft_id"])
+
     finally :
         cursor.close()
 

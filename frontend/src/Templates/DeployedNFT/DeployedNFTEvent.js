@@ -42,8 +42,8 @@ function DeployedNFTEvent(props) {
         const postdata = {
             "event" : "Minted",
             "price" : price, 
-            "fromhash" : account,
-            "tohash" : "SmartContract"
+            "fromhash" : "SmartContract" , 
+            "tohash" :  account
         }
         fetch(connstr, {
             headers: {

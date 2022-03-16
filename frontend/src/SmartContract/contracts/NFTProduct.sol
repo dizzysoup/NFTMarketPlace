@@ -39,11 +39,26 @@ contract NFTProduct {
     
     // 購買NFT
     function BuyNFT(address payable _creator, string memory _ipfs , uint256 _price, int128 _id  ) payable  public {    
-        UserHash = msg.sender ;  
+        payable(_creator).transfer(msg.value); // 向創作者轉帳
         emit BuySuccess(msg.sender,_creator , _ipfs , _price , _id );
     }
 
+    // 轉賣NFT
+    function ResellNFT(address payable from, address payable _creator , int128 _nftid) payable public {   
+        payable(from).transfer(msg.value / 100 * 60); // 向轉賣者轉帳
+        payable(_creator).transfer(msg.value / 100 * 40 ) ; // 創作者抽成
+        emit ResellSuccess(msg.sender,_creator ,from , msg.value ,_nftid );
+    }
+    // 轉賣NFT 事件
+    event ResellSuccess(
+        address user ,
+        address creator,
+        address from ,        
+        uint256 _price,
+        int128 _id 
+    );
     
+    // 成功購買事件
     event BuySuccess(
         address user,
         address creater,
@@ -51,7 +66,7 @@ contract NFTProduct {
         uint _price,
         int128 _id 
     );
-    
+    // 發布成功事件
     event Success(
        int128 ID, 
        address CreateHash ,

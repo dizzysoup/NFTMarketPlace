@@ -9,7 +9,6 @@ import { useLocation , useParams } from 'react-router-dom';
 function ResellPage(){
     const {asciveWallect , account  } = useEthers();
    const address = useParams().address;
-    console.log(address)
     return (
         <Flex
             w = "100%" 

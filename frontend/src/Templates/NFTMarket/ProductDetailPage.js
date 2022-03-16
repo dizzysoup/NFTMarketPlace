@@ -146,8 +146,7 @@ function ProductDetailPage(props) {
     useEffect(() => {
         fetch(connstr, { method: "GET" })
             .then(res => res.json())
-            .then(data => {
-                console.log(data)
+            .then(data => {                
                 setResult(data[0]);
             })
             .catch(e => { console.log(e) })
