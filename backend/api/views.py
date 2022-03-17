@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status , viewsets
 from rest_framework.response import Response
 import api
-from api.models import NFTProduct , Resell , Collection , Transaction
+from api.models import NFTProduct , Resell , Collection , Transaction ,Royaltie
 
 @api_view(['GET'])
 def nft_select(request):    
@@ -96,7 +96,7 @@ def nft_insert(request):
         title = result["title"] , ipfs = result["ipfs"] , 
         topic = result["topic"] , description = result["description"],
         creator = result["creator"] , price = result["price"],date = time.localtime(),
-        num = result["number"])
+        num = result["number"],royalties = result["royalties"])
     try :
         cursor = connection.cursor()
         route = '/assets/' + result["creator"] + '/'
@@ -214,16 +214,23 @@ def transaction(request):
     result = request.data 
     if request.method == 'POST':
         try :
-            cursor = connection.cursor()
-            query = '''
-                insert into transaction_t(event,price,fromaddress,toaddress,nft_id,date)
-                select %s,%s,%s,%s,id,now() from nft_t order by id desc limit 1                 
-            '''
-            event = str(result['event'])
-            price = str(result['price'])
-            fromhash = str(result['fromhash'])
-            tohash = str(result['tohash'])            
-            cursor.execute(query,[event,price,fromhash,tohash])            
+            if result['event'] == 'Minted' :
+                cursor = connection.cursor()
+                query = '''
+                    insert into transaction_t(event,price,fromaddress,toaddress,nft_id,date)
+                    select %s,%s,%s,%s,id,now() from nft_t order by id desc limit 1                 
+                '''
+                event = str(result['event'])
+                price = str(result['price'])
+                fromhash = str(result['fromhash'])
+                tohash = str(result['tohash'])            
+                cursor.execute(query,[event,price,fromhash,tohash])
+            else : 
+                Transaction.objects.create(
+                    event = result['event'] , price = result['price'] , 
+                    fromaddress = result['fromhash'] , toaddress = result['tohash'],
+                    nft_id = result['id'], date = time.localtime()
+                )
         finally :
             cursor.close()
     if request.method == 'GET' :
@@ -653,6 +660,8 @@ def resell(request):
             Collection.objects.create(address = data["to"] , nft_id = data["nft_id"])
             Transaction.objects.create(event = data["event"], price = data["price"] , fromaddress = data["fromaddress"],
                 toaddress = data["to"], nft_id = data["nft_id"])
+            _roy = int(data["price"] ) / 100 * data["royalties"]
+            Royaltie.objects.create(address = data["creator"], nft_id = data["nft_id"] ,royalties = _roy )
 
     finally :
         cursor.close()

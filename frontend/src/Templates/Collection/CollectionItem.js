@@ -5,10 +5,10 @@ import Slider from 'react-slick';
 import CollectionItemDetail from "./CollectionItemDetail" ; 
 import { InitContext } from "../../App" ;
 
-async function CollectCheck(account){
+async function CollectCheck(account , eventstr){
     const contract = getContract();    
     const eventOption = {fromBlock : 0 };
-    const event = await contract.getPastEvents("BuySuccess", eventOption);
+    const event = await contract.getPastEvents(eventstr, eventOption);
 
     let logtable = [];
     for(let i = 0 ; i < event.length ; i++){        
@@ -16,7 +16,7 @@ async function CollectCheck(account){
         if (val["user"] == account ){
             logtable.push(val);
         }      
-    }
+    }   
     return logtable ;    
 }
 
@@ -30,31 +30,38 @@ async function CollectionTable(account){
     return collecttable
 }
 
+
+async function Collection_SuccessCheck(account, eventstr){
+    const logtable = await CollectCheck(account , eventstr); 
+    const databasetable = await CollectionTable(account);
+    let resultatable = [];
+    for(let i = 0 ; i< databasetable[0].length ; i ++ ){
+        const data_id = databasetable[0][i].id ;
+        let val = 0 ;
+        for(let j = 0 ; j < logtable.length;j++){
+            const log_id = logtable[j]._id
+            if (data_id == log_id){
+                val = 1;
+                break ; 
+            }                
+        }    
+        if(val == 1 ) resultatable.push(databasetable[0][i]);
+    }      
+    console.log(resultatable)
+    return resultatable ;   
+}
+
 function CollectionItem(props){
-    const [ result , SetResult ] = useState([]);
+    const [ buytable , SetBuyTable ] = useState([]);
+    const [ reselltable , SetResellTable  ] = useState([]);
     const account = props.account ;    
     const contextdata = useContext(InitContext);
     
     useEffect(async() =>{                
-        const logtable = await CollectCheck(account);         
-        const databasetable = await CollectionTable(account);
-        let resultatable = [];
-        for(let i = 0 ; i< databasetable[0].length ; i ++ ){
-            const data_id = databasetable[0][i].id ;
-            let val = 0 ;
-            for(let j = 0 ; j < logtable.length;j++){
-                const log_id = logtable[j]._id
-                if (data_id == log_id){
-                    val = 1;
-                    break ; 
-                }                
-            }    
-            if(val == 1 ) resultatable.push(databasetable[0][i]);
-        }        
-        if (resultatable == [] )
-            SetResult(null);
-        else 
-            SetResult(resultatable);
+        const buy =  await Collection_SuccessCheck(account, "BuySuccess");
+        SetBuyTable(buy);
+        const resell = await Collection_SuccessCheck(account, "ResellSuccess");
+        SetResellTable(resell);
     },[account,contextdata.reload]);
 
     const settings = {
@@ -77,7 +84,7 @@ function CollectionItem(props){
         slidesToScroll: 1,
     };   
 
-    return result.length == 0 ? (
+    return buytable.length == 0 && reselltable.length == 0  ? (
         <Text 
             fontSize="5xl"       
             align="center"  
@@ -85,12 +92,20 @@ function CollectionItem(props){
     ) : (
         <Slider {...settings} > 
             {               
-                result.map((res, index) => {                    
+                buytable.map((res, index) => {                    
                     return <div>
                         <CollectionItemDetail  key = {index} content = {res} />
                     </div>
                 })
-            }            
+            }
+             {               
+                reselltable.map((res, index) => {                    
+                    return <div>
+                        <CollectionItemDetail  key = {index} content = {res} />
+                    </div>
+                })
+            }                  
+           
         </Slider>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, useStyles } from "@chakra-ui/react";
 import { getBlock, getContract } from "../../hook/NFTSmartContract";
 
 function trans_table(event, price, from, to, date) {
@@ -61,15 +61,40 @@ async function BuyEvent(props) {
     return table ; 
 }
 
+async function ResellCheck(props){
+    const contract = getContract();
+    const eventOption = { fromBlock : 0 }
+    const event = await contract.getPastEvents('ResellSuccess', eventOption);
+    let table = [];
+    // 驗證
+    for(let i = 0 ; i < event.length ; i++){
+        const val = event[i].returnValues ; 
+        const blocknumber = event[i].blockNumber; //所在的block     
+        if(val["_id"] == props.no ){
+            const block = await getBlock(blocknumber, true); //取得該區塊所有資訊  
+            if (block.transactions[0] !== undefined) {
+                const _date = new Date(block.timestamp * 1000);                
+                const date = _date.getFullYear() + " / " + (_date.getMonth() + 1) + " / " + (_date.getDate());
+                table.push(trans_table("ReSell",  block.transactions[0].value / 10**18 , val.from, val.user , date));
+            }
+        }  
+    }
+    return table ; 
+
+}
+
 function TransactionActitvity(props) {
     const [minted, setMinted] = useState(null);
     const [saled , setSaled ] = useState(null);
+    const [resell , setResell ] = useState(null);
 
     useEffect(async() => {
         const mintedtable = await DeployedEvent(props);
         setMinted(mintedtable);
         const saledtable = await BuyEvent(props);
         setSaled(saledtable);
+        const reselltable = await ResellCheck(props);
+        setResell(reselltable);
     }, [])
 
     return (
@@ -86,6 +111,7 @@ function TransactionActitvity(props) {
             <Tbody>
                 {minted}
                 {saled}
+                {resell}
             </Tbody>
         </Table>
     );

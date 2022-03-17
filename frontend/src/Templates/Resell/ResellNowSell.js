@@ -30,19 +30,19 @@ function ResellBtn(props) {
     const content = props.content;
     const contextdata = useContext(InitContext);
     const contract = getContract();
-    console.log(content);
 
     // 上鏈 + 資料庫維護
-    function ResellBuy(price, to, from, nft_id) {
+    function ResellBuy(price) {
         const data = {
             event: "Resell",
             creator : content.creator,
             price: price,
-            fromaddress: from,
-            to: to,
-            nft_id: nft_id
+            fromaddress: content.address,
+            to: account,
+            nft_id: content.id,
+            royalties : content.royalties
         }        
-        contract.methods.ResellNFT(data.fromaddress,data.creator, data.nft_id).send({
+        contract.methods.ResellNFT(data.fromaddress,data.creator, data.nft_id , data.royalties ).send({
             from: account,
             to: data.fromaddress,
             value: price * 10 ** 18
@@ -69,7 +69,7 @@ function ResellBtn(props) {
             <Text fontSize="2xl" > {content.title} </Text>
             <Text fontSize="2xl" > Price :  {content.price} </Text>
             {account !== content.address ? <Button onClick={async() => {
-                await ResellBuy(content.price, content.creator, content.address, content.id)
+                await ResellBuy(content.price)
                 contextdata.SetReLoad(contextdata.reload + 1)
             }}>
                 Buy

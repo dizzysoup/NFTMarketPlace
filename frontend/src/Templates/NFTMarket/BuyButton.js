@@ -26,8 +26,7 @@ export default function BuyButton(val){
         "id" : val.id
     }
 
-    function Buy(){     
-                
+    function Buy(){            
         contract.methods.BuyNFT(val.creator , val.ipfsHash , val.price , val.id).send({
             from : account ,
             to: val.creator,

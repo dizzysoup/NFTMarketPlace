@@ -29,8 +29,7 @@ function DeployedNFTEvent(props) {
             ipfs.add(data)
                 .then(function(res){
                     ipfshash = 'https://ipfs.io/ipfs/' + res.path ;
-                    Call();
-                    
+                    Call();       
             })        
         }
       
@@ -84,8 +83,10 @@ function DeployedNFTEvent(props) {
             "ipfs": ipfshash,
             "description": description,
             "price": price,
-            "number" : number
+            "number" : number,
+            "royalties" : royalties
         }
+
         fetch(connstr, {
             headers: {
                 'Accept': 'application/json',

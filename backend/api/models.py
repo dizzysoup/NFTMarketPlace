@@ -23,6 +23,7 @@ class NFTProduct(models.Model):
     num = models.IntegerField(null = True, ) # nft 數量
     description = models.TextField(null = False ) # nft 描述
     price = models.IntegerField(null = True) # nft 價格
+    royalties = models.IntegerField(null = False , default = "10") # 創作者抽成
     date = models.DateField(auto_now_add=True , null = True ) # nft deployed 時間
 
     class Meta:
@@ -102,3 +103,11 @@ class Resell(models.Model):
 
     class Meta :
         db_table = "Resell_t"
+
+# 抽成資料表
+class Royaltie(models.Model):
+    address = models.TextField(null = False) # 轉賣帳戶
+    nft_id = models.IntegerField() # 轉賣的NFT
+    royalties = models.IntegerField() # 抽成價格
+    class Meta :
+        db_table = "royalties_t"

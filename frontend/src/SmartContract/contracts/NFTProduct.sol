@@ -44,10 +44,10 @@ contract NFTProduct {
     }
 
     // 轉賣NFT
-    function ResellNFT(address payable from, address payable _creator , int128 _nftid) payable public {   
-        payable(from).transfer(msg.value / 100 * 60); // 向轉賣者轉帳
-        payable(_creator).transfer(msg.value / 100 * 40 ) ; // 創作者抽成
-        emit ResellSuccess(msg.sender,_creator ,from , msg.value ,_nftid );
+    function ResellNFT(address payable from, address payable _creator , int128 _nftid , uint128 _roy) payable public {   
+        payable(from).transfer(msg.value / 100 * (100 - _roy )); // 向轉賣者轉帳
+        payable(_creator).transfer(msg.value / 100 * _roy ) ; // 創作者抽成
+        emit ResellSuccess(msg.sender,_creator ,from , msg.value ,_nftid , _roy );
     }
     // 轉賣NFT 事件
     event ResellSuccess(
@@ -55,7 +55,8 @@ contract NFTProduct {
         address creator,
         address from ,        
         uint256 _price,
-        int128 _id 
+        int128 _id ,
+        uint _roy
     );
     
     // 成功購買事件
