@@ -17,6 +17,7 @@ export const InitContext = createContext({
 function App() {  
   const [loginstate, SetLogin] = useState(0);
   const [poststate, SetPost] = useState(-1);
+  const [page , ChangePage ] = useState(0) ; // 切換頁面
   const [responsestate, UpdateResponse] = useState(0);
   const [router , SetRouter ] = useState(null);
   const [reload , SetReLoad ] = useState(-1); // 重新載入頁面的變數
@@ -33,7 +34,9 @@ function App() {
         router,
         SetRouter,
         reload,
-        SetReLoad
+        SetReLoad,
+        page ,
+        ChangePage
       }}
     >      
       <DAppProvider config={{}} >

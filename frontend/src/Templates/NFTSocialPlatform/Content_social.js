@@ -49,8 +49,7 @@ function Content_social(props) {
         <Flex
             bg="red.600"
             w="100%"
-            h="100%"
-            position="fixed"
+            h="100%"            
         >
             <Box
                 w='80%'
