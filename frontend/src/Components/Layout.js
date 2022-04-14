@@ -16,15 +16,6 @@ function SettingComponent() {
   );
 }
 
-function PersonalSocialRoom() {
-  return (
-    <MenuItem>
-      <Link to="/NFTSocial/home">
-        Social Room
-      </Link>
-    </MenuItem>    
-  );
-}
 
 function ProfileComponent() {
   const { account , ConnectWallect } = useEthers();
@@ -56,8 +47,7 @@ function LoginBtn() {
       </MenuButton>
       <MenuList>
         <ProfileComponent />
-        <SettingComponent />
-        <PersonalSocialRoom />
+        <SettingComponent />        
         <MenuItem>
           <Link to="/LoginPage"
             onClick={() => contextData.SetLogin(0)}
@@ -96,6 +86,11 @@ class Layout extends React.Component {
           <Button m="4" mt="0.5%">
             <Link to="/SocialHall">
               Social Hall
+            </Link>
+          </Button>
+          <Button m="4" mt="0.5%">
+            <Link to = "/NFTSocial/home">
+              0xCommunity 
             </Link>
           </Button>
           <Spacer />

@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Box, Flex, Text, Button, HStack } from "@chakra-ui/react";
-import { Collapse, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Text, Button, Image } from "@chakra-ui/react";
 import { InitContext } from "../../App";
-
+import { getContract } from "../../hook/NFTSmartContract";
+import QRCode from 'qrcode.react';
 
 const boxstyle = {
     bg: "gray.800",
@@ -21,13 +21,12 @@ function NFTCommunityHomePage() {
     const [pages, SetPages] = useState([]);
 
     useEffect(() => {
-        if (context_val.page == 0)
-            SetPages(<WelcomeBlock context_val={context_val} />)
-        else if (context_val.page == 1)
-            SetPages(<CreatorBlock context_val={context_val} />)
+        if (context_val.page != 0)
+            SetPages(<QRLoginBlock />)
+        else
+            SetPages(<WelcomeBlock />);
 
-    }, [context_val.page]);
-
+    }, [context_val.val])
 
     return (
         <Flex
@@ -43,7 +42,7 @@ function NFTCommunityHomePage() {
 }
 
 // 0xCommunity 歡迎頁面
-function WelcomeBlock(props) {
+function WelcomeBlock() {
     return (
         <Box {...boxstyle}>
             <Box>
@@ -57,82 +56,94 @@ function WelcomeBlock(props) {
                     color="gray.300"
                 > 0xCommunity  </Text>
             </Box>
-            <HStack mt="5%" spacing="10%">
-                <Box>
-                    <Text color="gray.300"
-                        fontSize="3xl"
-                    > NFT創作者 </Text>
-                    <Text color="gray.300"> 使用 NFT 創立專屬社群</Text>
-                    <Button
-                        mt="1%"
-                        color="blue.400"
-                        fontSize="3xl"
-                        onClick={() => props.context_val.ChangePage(1)}
-                    > 創立NFT Member Club </Button>
-                </Box>
-                <Box>
-                    <Text color="gray.300" fontSize="3xl">
-                        NFT 會員
-                    </Text>
-                    <Text color="gray.300"> 透過NFT驗證進入社群 </Text>
-                    <Button
-                        mt="1%"
-                        color="red.400"
-                        fontSize="3xl"
-                    >
-                        進入NFT社群
-                    </Button>
-                </Box>
-            </HStack>
+
+            <Box>
+                <Text color="gray.300"
+                    fontSize="3xl"
+                > NFT Community </Text>
+                <Text color="gray.300"> 進入 NFT 專屬社群</Text>
+                <Button
+                    mt="1%"
+                    color="blue.400"
+                    fontSize="3xl"
+                > 從區塊鏈讀取項目 </Button>
+            </Box>
+            <NFTProduct />
         </Box>
 
     );
 }
 
-// 0xCommunity 創作者創作 Community 頁面
-function CreatorBlock(props) {
-    const {isOpen , onToggle } = useDisclosure();
+// QRcode 驗證登入介面
+function QRLoginBlock() {
+    const context_val = useContext(InitContext);
+    return (
+        <Box {...boxstyle} >
+            <Flex alignItems="center" w="100%" h="100%">
+                <Image boxSize="350px" borderRadius="3xl" src={context_val.val.IpfsHash} />
+                <Flex ml="5%" flexDirection="column" justifyContent="center" w="100%">
+                    <Text color="white" fontSize="5xl"> Welcom to  "{context_val.val.Title}" Community !</Text>
+                    <Flex p="3%" align="center">
+                        <Box>
+                            <Text color="white" fontSize="4xl"> Verify and Login : </Text>
+                            <Text color="white" fontSize="1xl"> IpfsHash + MetaMask address  </Text>
+                        </Box>
+                        <Box ml="5%">
+                            <QRCode
+                                fgColor="#000000"
+                                size={150}
+                                value={context_val.val.IpfsHash}
+                            />
+                        </Box>
+                    </Flex>
+                </Flex>
+            </Flex>
+        </Box>
+    );
+
+}
+
+// NFT 項目從Blockchain 撈取
+function NFTProduct() {
+    const contract = getContract();
+    const eventOption = { fromBlock: 0 };
+    const [res, SetResult] = useState([]);
+    useEffect(async () => {
+        const event = await contract.getPastEvents('Success', eventOption);
+        let table = [];
+        for (let i = 0; i < event.length; i++) {
+            const val = event[i].returnValues; // 合約回傳的val           
+            table.push(val);
+        }
+        SetResult(table);
+    }, [])
+    return (
+        <Flex>
+            {
+                res.map((res, index) => {
+                    return <NFTBlock content={res} />
+                })
+            }
+        </Flex>
+    );
+}
+
+// NFT項目細節
+function NFTBlock(props) {
+    const context_val = useContext(InitContext);
+    const content = props.content;
 
     return (
-        <Box {...boxstyle}>
-            <Box mt="5%">
-                <HStack spacing="3%">
-                    <Box>
-                        <Text color="gray.300"
-                            fontSize="3xl"
-                        > NFT創作者 </Text>
-                        <Text color="gray.300"> 使用 NFT 創立專屬社群</Text>
-                    </Box>
-                    <Box
-                        bg="white"
-                        p="0.5%"
-                        mt="1%"
-                        borderRadius="1xl"
-                    >
-                        <Text
-                            color="blue.400"
-                            fontSize="3xl"
-                        > 創立NFT Member Club </Text>
-                    </Box>
-                </HStack>
-            </Box>
-            <Box mt="3%">
-                <Flex >
-                    <Text
-                        fontSize="3xl"
-                        color="gray.300"
-                    >
-                        選擇你的 NFT 鑄造成 NFT Member Card
-                    </Text>
-                    <Button ml = "0.5%" onClick={onToggle}> Select ! </Button>
-                </Flex>
-            </Box>
-        
-            <Collapse in = {isOpen}>
-                <Box w = "95%" h = "100%" bg = "red" position="sticky">
-                    <Text fontSize="3xl" color = "gray.300"> 123 </Text>
-                </Box>
-            </Collapse>
+        <Box
+            m="1%"
+            cursor="pointer"
+        >
+            <Image boxSize="150px" borderRadius="3xl"
+                onClick={() => {
+                    context_val.ChangePage(1);
+                    context_val.SetVal(content);
+                }}
+                src={content.IpfsHash} />
         </Box>
     );
 }

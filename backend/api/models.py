@@ -23,9 +23,9 @@ class NFTProduct(models.Model):
     num = models.IntegerField(null = True, ) # nft 數量
     description = models.TextField(null = False ) # nft 描述
     price = models.IntegerField(null = True) # nft 價格
-    royalties = models.IntegerField(null = False , default = "10") # 創作者抽成
+    royalties = models.IntegerField(null = False , default = "10") # 創作者抽成    
     date = models.DateField(auto_now_add=True , null = True ) # nft deployed 時間
-
+    
     class Meta:
         db_table = "nft_t"
 
@@ -111,3 +111,12 @@ class Royaltie(models.Model):
     royalties = models.IntegerField() # 抽成價格
     class Meta :
         db_table = "royalties_t"
+
+# 會員卡資料表
+# 一個創作者所成立的 0xCommunity
+class MemberCard(models.Model):
+    creator = models.TextField(null = False ) # 創作者帳戶
+    nft_id = models.IntegerField() # 產品NFT_id
+    
+    class Meta : 
+        db_table = "membercard_t"

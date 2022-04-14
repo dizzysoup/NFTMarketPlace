@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, useStyles } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { getBlock, getContract } from "../../hook/NFTSmartContract";
 
 function trans_table(event, price, from, to, date) {

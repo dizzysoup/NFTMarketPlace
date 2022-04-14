@@ -12,8 +12,8 @@ from django.db import connection
 from rest_framework.decorators import api_view 
 from rest_framework import status , viewsets
 from rest_framework.response import Response
-import api
-from api.models import NFTProduct , Resell , Collection , Transaction ,Royaltie
+from api.serializers import NFTSerializer
+from api.models import NFTProduct , Resell , Collection , Transaction ,Royaltie, MemberCard
 
 @api_view(['GET'])
 def nft_select(request):    
@@ -667,3 +667,17 @@ def resell(request):
         cursor.close()
 
     return Response(result , status = status.HTTP_200_OK)
+
+# 針對創作者的NFT產品撈取
+# 目的是為了撈取一個創作者所鑄造的NFT產品
+@api_view(['GET', 'POST'])
+def nft_creator(request):   
+    if request.method == 'GET' :
+        address = request.GET.get("address")
+        nft = NFTProduct.objects.filter(creator=address).order_by('date')
+        result = NFTSerializer(nft , many = True ).data 
+    elif request.method == 'POST' :
+        result = request.data        
+        MemberCard.objects.create(creator = result['creator'],nft_id = result["id"])
+    return Response(result, status = status.HTTP_200_OK)
+

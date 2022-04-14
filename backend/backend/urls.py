@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/recommend',views.recommend , name = "Recommend random  "),
     path('api/hot_nft',views.hotnft, name = "Hot NFT "),
     path('api/top_creator',views.topcreator, name = "Top Sales "),
+    re_path('api/nftcreator',views.nft_creator, name = "NFT Select by creator ( url key = address) "),
     re_path('api/resell' , views.resell , name = "Resell NFT (POST / GET) "),
     re_path('api/nft_totally' , views.totallynft , name = "Totally for nft by id "),
     re_path('api/nft_title' , views.nft_title , name = "NFT title GET "),

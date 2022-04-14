@@ -1,5 +1,5 @@
-import React , {useRef } from "react";
-import {  Button } from "@chakra-ui/react";
+import React, { useRef } from "react";
+import { Button } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { useContractMethod } from "../../hook/NFTSmartContract";
 import { useEthers } from "@usedapp/core";
@@ -14,65 +14,63 @@ function DeployedNFTEvent(props) {
     const toastIdRef = useRef();
 
     const value = props.value;
-    
+
     let ipfshash = "";
 
-    function deployed(value) {            
+    function deployed(value) {
         if (Boolean(value.img_array) === true && Boolean(value.title) === true && Boolean(value.royalties) === true
-            && Boolean(value.price) === true) {            
-            const data = value.img_array;           
+            && Boolean(value.price) === true) {
+            const data = value.img_array;
             const ipfs = create({
                 host: 'localhost',
                 port: '5001',
-                protocol: 'http'  
+                protocol: 'http'
             });
             ipfs.add(data)
-                .then(function(res){
-                    ipfshash = 'https://ipfs.io/ipfs/' + res.path ;
-                    Call();       
-            })        
+                .then(function (res) {
+                    ipfshash = 'https://ipfs.io/ipfs/' + res.path;
+                    Call();
+                })
         }
-      
+
     }
-    
-    function InsertInTransaction(){
-        const price = value.price ; 
-        const connstr = "http://192.168.31.7:8000/api/trans" ;
+
+    // 插入到交易資料表中
+    async function InsertInTransaction() {
+        const price = value.price;
+        const connstr = "http://192.168.31.7:8000/api/trans";
         const postdata = {
-            "event" : "Minted",
-            "price" : price, 
-            "fromhash" : "SmartContract" , 
-            "tohash" :  account
+            "event": "Minted",
+            "price": price,
+            "fromhash": "SmartContract",
+            "tohash": account
         }
-        fetch(connstr, {
+        await fetch(connstr, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: "POST",
             body: JSON.stringify(postdata)
+        }).catch(function (res) { console.log(res) })
+        toastIdRef.current = toast({ 
+            status : 'success',
+            description: 'Deployed Success!!'             
         })
-            .then(function (res) { 
-                toastIdRef.current = toast({ 
-                    status : 'success',
-                    description: 'Deployed Success!!'             
-                })
-                history.push('/MarketPage');
-            })
-            .catch(function (res) { console.log(res) })    
+        history.push('/MarketPage');
     }
-     
+
     async function Call() {
         const price = value.price;
         const num = value.number;
         const topic = value.topic;
-        const description = value.description;       
+        const description = value.description;
         const link = value.link;
         const title = value.title;
-        const royalties = value.royalties;  
-        const number = value.number ;      
-       
-        await deployedNFT(title, num, price, topic , royalties, ipfshash, description, link); // 上鏈
+        const royalties = value.royalties;
+        const number = value.number;
+
+        await deployedNFT(title, num, price, topic, royalties, ipfshash, description, link); // 上鏈
         // 存入資料庫中
         const connstr = "http://192.168.31.7:8000/api/nft";
 
@@ -83,23 +81,23 @@ function DeployedNFTEvent(props) {
             "ipfs": ipfshash,
             "description": description,
             "price": price,
-            "number" : number,
-            "royalties" : royalties
+            "number": number,
+            "royalties": royalties
         }
 
-        fetch(connstr, {
+        await fetch(connstr, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: "POST",
             body: JSON.stringify(postdata)
-        })
-            .then(function (res) { InsertInTransaction();  })
-            .catch(function (res) { console.log(res) })    
+        }).catch(function (res) { console.log(res) })
+        await  InsertInTransaction(); // 插入到交易資料表中
+
     }
 
- 
+
     return (
         <div>
             <Button

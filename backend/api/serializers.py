@@ -9,4 +9,4 @@ class ApiSerializer(serializers.ModelSerializer):
 class NFTSerializer(serializers.ModelSerializer):
     class Meta : 
         model = NFTProduct
-        fields = ('id' , 'creator' , 'title','ipfs','artworktype','description')
+        fields = '__all__'

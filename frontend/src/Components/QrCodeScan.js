@@ -1,14 +1,7 @@
-import React, { useState } from "react";
-import  jsQR from 'jsqr';
-import QrCode from "qrcode.react";
-import { Input } from "@chakra-ui/react";
+import jsQR from "jsqr";
 
 
-function TestingPage() {
-  const [ msg , SetText ] = useState(null);
-  const [qrcode , SetQrcode ] = useState(null);
-
-  const QrCodeScan = async(e) => {    
+const QrCodeScan = async(e) => {    
     const file = e.target.files.item(0);
  
     const imgfile = new FileReader();
@@ -31,20 +24,6 @@ function TestingPage() {
       SetText(code.data);
     }
 
-  }
-  return(
-  <div>
-    <Input type = "text"  onChange = {(e) => SetQrcode(e) }/>    
-    <QrCode 
-      value = { qrcode }
-      size = {200}
-      fgColor = "#000000"
-    />
-    <h1> { msg}</h1>
-    <Input type="file"  onChange={(e)=>QrCodeScan(e)} />
-  </div>);
 }
 
-
-
-export default TestingPage;
+export default QrCodeScan ; 
