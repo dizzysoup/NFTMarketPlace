@@ -19,6 +19,10 @@ export function GetWeb3(){
     return web3
 }
 
+export function getTransaction(hash){
+    return web3.eth.getTransaction(hash)
+}
+
 // 使用智能合約方法
 export function useContractMethod(name){
     const { state , send } = useContractFunction(NFTContract, name , {transactionName : name });

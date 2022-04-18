@@ -25,6 +25,7 @@
     "eth-lib": "^0.1.29",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+    "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "http": "^0.0.1-security",
     "ipfs-core": "^0.14.1",

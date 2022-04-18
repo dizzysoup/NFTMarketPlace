@@ -1,9 +1,12 @@
 import jsQR from "jsqr";
+import React , { useContext} from "react";
+import {InitContext } from "../App";
 
-
-const QrCodeScan = async(e) => {    
+//QrCode 解碼
+async function QrCodeScan(e, context_val ){    
+    
     const file = e.target.files.item(0);
- 
+    let code = "";
     const imgfile = new FileReader();
     imgfile.readAsDataURL(file);
     imgfile.onload = async() => {
@@ -20,10 +23,13 @@ const QrCodeScan = async(e) => {
       context.drawImage(image , 0,0);
       const imageData = context.getImageData(0,0,image.width,image.height);    
       
-      const code = jsQR(imageData.data, image.width , image.height);
-      SetText(code.data);
-    }
+      code = jsQR(imageData.data, image.width , image.height);
+      context_val.SetData(code.data)      
+    }    
 
 }
+
+
+
 
 export default QrCodeScan ; 

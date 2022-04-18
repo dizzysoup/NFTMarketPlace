@@ -51,9 +51,6 @@ function MarketPage() {
             <Flex h="100%" w="95%" mt="1%"  >
                 <Box bg="gray.400" w="20%" h="100%" p="1%" >
                     <Box {...boxstyle} >
-                       {/* <Select placeholder = 'Order by '>
-                           <option value = 'time'> Deployed Time  </option>
-                        </Select> */}
                         <Text fontSize="3xl" > Filter </Text>                        
                     </Box>
                     <Box>

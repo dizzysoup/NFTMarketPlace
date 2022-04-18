@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text } from "@chakra-ui/react";
 import CollectionItem from './CollectionItem';
 import CreatorCollection from './CreatorCollection';
-
+import InitizationContext from '../../Components/InitizationContext';
 const boxstyle = {
     w: "100%",
     h: "auto",
@@ -14,6 +14,7 @@ const boxstyle = {
 }
 
 function CollectionPage(props) {
+    InitizationContext(); //初始化全域變數
     const account = props.account;
     return (
         <Box

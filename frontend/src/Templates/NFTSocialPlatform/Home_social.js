@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
 import Content_social from "./Content_social";
 import SocialLayout from "./SocialLayout";
 import NFTCommunityHomePage from "./NFTCommunityHomePage";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 class Home_social extends Component {
     render() {

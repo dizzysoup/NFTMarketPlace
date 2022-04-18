@@ -20,7 +20,7 @@ class RouterManager extends Component {
                 <Route path="/AccountPage/:option/:address" component={AccountPage}></Route>
                 <Route path="/Setting" component={ Setting }></Route>                
                 <Route path="/assets/:creatorhash/:id" component={ProductDetailPage} />
-                <Route exact path="/NFTSocial/home" component={ Home_social } /> 
+                <Route exact path="/NFTSocial/:id" component={ Home_social } /> 
                 <Route path="/SocialHall" component = { SocialHallMain } />              
                 <Route path="/Test" component= { TestingPage } /> 
             </div>

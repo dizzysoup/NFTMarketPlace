@@ -21,7 +21,9 @@ function App() {
   const [responsestate, UpdateResponse] = useState(0);
   const [router , SetRouter ] = useState(null);
   const [reload , SetReLoad ] = useState(-1); // 重新載入頁面的變數
+  const [status , SetStatus ] = useState(false); // 全域狀態變數
   const [val , SetVal ] = useState([]); // 填數據值
+  const [ data , SetData ]  = useState(''); //填數據值
   
   return (
     <InitContext.Provider
@@ -39,7 +41,11 @@ function App() {
         page ,
         ChangePage,
         val,
-        SetVal
+        SetVal,
+        status,
+        SetStatus,
+        data,
+        SetData
       }}
     >      
       <DAppProvider config={{}} >

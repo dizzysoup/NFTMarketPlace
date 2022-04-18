@@ -9,11 +9,14 @@ import FavoritePage from "../Favorite/FavoritePage";
 import ResellPage from "../Resell/ResellPage";
 import { useEtherBalance } from "@usedapp/core";
 
+
 function AccountPage(){        
     const option = useParams().option ;    
     const account = useParams().address ;    
     const etherBalance = useEtherBalance(account);   
-    let children = [] ;  
+    let children = [] ;    
+    
+
 
     switch(option){
         case "Collection"  :

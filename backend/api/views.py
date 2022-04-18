@@ -92,6 +92,7 @@ def nft_title(request):
 @api_view(['GET','POST'])
 def nft_insert(request):
     result = request.data
+    print(result)
     NFTProduct.objects.create( 
         title = result["title"] , ipfs = result["ipfs"] , 
         topic = result["topic"] , description = result["description"],

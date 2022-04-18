@@ -4,15 +4,14 @@ pragma solidity ^0.8.0;
 
 contract NFTProduct {
     int128 public ID;  
+    string public Name ;
     uint256 public Price; 
     int128 public Num ; 
     address public CreateHash;
     address public UserHash ; 
-    string public ArtWorkType ; 
+    string public Topic ; 
     string public Description ;
-    string public Ipfshash ;
-    string public Link ;
-    string public Title ;   
+    string public Ipfshash ;                
     int16 public Royalties ; 
     
 
@@ -22,25 +21,24 @@ contract NFTProduct {
 
     
     // 發布NFT
-    function DeployedNFT(string memory _title , uint256 _price , int128 _num , string memory _type , int16 _roy ,string memory _ipfs , string memory _des  , string memory _lik )  public   
+    function DeployedNFT(string memory _name , uint256 _price , int128 _num , string memory _topic , int16 _roy , string memory _des,string memory _ipfs ,string memory _hash )  public   
     {
         ID ++ ; 
+        Name = _name; 
         CreateHash = msg.sender ; 
         Price = _price ; 
-        Num = _num ; 
-        Title = _title; 
-        ArtWorkType = _type ;
+        Num = _num ;         
+        Topic = _topic ;
         Royalties = _roy ;      
         Ipfshash = _ipfs ; 
         Description = _des ; 
-        Link = _lik ; 
-        emit Success(ID, msg.sender, _price ,_num, _title , _type , _roy ,_ipfs , _des , _lik );
+        emit Success(ID,_name , msg.sender, _price ,_num, _topic , _roy ,_ipfs , _des ,_hash );
     }
     
     // 購買NFT
-    function BuyNFT(address payable _creator, string memory _ipfs , uint256 _price, int128 _id  ) payable  public {    
+    function BuyNFT(address payable _creator, string memory _ipfs , uint256 _price, int128 _id , string memory _hash ) payable  public {    
         payable(_creator).transfer(msg.value); // 向創作者轉帳
-        emit BuySuccess(msg.sender,_creator , _ipfs , _price , _id );
+        emit BuySuccess(msg.sender,_creator , _ipfs , _price , _id , _hash );
     }
 
     // 轉賣NFT
@@ -65,20 +63,21 @@ contract NFTProduct {
         address creater,
         string _ipfs ,
         uint _price,
-        int128 _id 
+        int128 _id,
+        string _hash 
     );
     // 發布成功事件
     event Success(
        int128 ID, 
+       string Name,
        address CreateHash ,
        uint256 Price, 
-       int128 Num , 
-       string Title,
-       string ArtWorkType,
+       int128 Num ,       
+       string Topic,
        int16 Royalties, 
        string IpfsHash,
        string Description,
-       string Link
+       string Hash 
     );
 
 }
