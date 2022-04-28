@@ -148,6 +148,7 @@ function LoginCheck() {
                 <Progress mt="5%" isIndeterminate />
             </Box>);break;
         case -1 :
+            
             res = (<Box>
                 <CloseIcon color="red" w="200px" h="200px" />
                 <Text fontSize="3xl" color="white" ml="10%"> 驗證失敗 </Text>

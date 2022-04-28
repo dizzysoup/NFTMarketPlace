@@ -180,7 +180,7 @@ function ProcessBlock() {
                     <HStack spacing="20%">
                         <Flex flexDirection="column" align="center" w="20%" >
                             <Image boxSize={150} src={lock} />
-                            <Text {...FontStyle}>  資料加密 </Text>
+                            <Text {...FontStyle}>  資料雜湊 </Text>
                         </Flex>
                         <Flex flexDirection="column" align="center" w="20%" >
                             <Image boxSize={150} src={ganache} />

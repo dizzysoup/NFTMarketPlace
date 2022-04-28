@@ -4,7 +4,7 @@ import { getContract } from "../../hook/NFTSmartContract";
 import { useEthers } from "@usedapp/core";
 import { useToast } from "@chakra-ui/react";
 import {InitContext } from "../../App" ;
-import sha256 from "../../Components/CreateHash";
+import sha256 from "../../Components/Crypto";
 
 // 故意等待秒數 
 async function wait(ms) {

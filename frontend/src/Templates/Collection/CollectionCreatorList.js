@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, Box, Image, Flex } from "@chakra-ui/react";
-import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td
-} from '@chakra-ui/react'
+import { useEthers } from "@usedapp/core";
+import { Text, Box, Image, Flex, Button } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
+import { Collapse } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { downloadQRCode } from "../../Components/Qrcode";
+import sha256 from "../../Components/Crypto";
+import QrCode from "qrcode.react";
+
 
 function TableData(props) {
     const content = props.content;
@@ -17,7 +16,7 @@ function TableData(props) {
             <Td> {content.event} </Td>
             <Td >
                 {content.toaddress != "SmartContract" ?
-                    <Link to={"/AccountPage/Collection/" + content.toaddress} title = {content.toaddress}>
+                    <Link to={"/AccountPage/Collection/" + content.toaddress} title={content.toaddress}>
                         <Text
                             color="blue"
                             textDecoration="underline"
@@ -72,14 +71,45 @@ function TransactionBLock(props) {
     );
 }
 
+function DownloadQrCodeBtn(props) {
+    const account = props.account;
+    const ipfs = props.ipfs;
+    const hash = sha256(ipfs + account);
+    const [show, setShow] = useState(false);
+    return (
+
+        <Flex ml="5%" mt="1%">
+            <Button onClick={() => setShow(!show)}>  Member Card </Button>
+            <Collapse in={show} >
+                <Box
+                    ml="5%"
+                    onClick={() => downloadQRCode(hash)}
+                    cursor="pointer"
+                >
+                    <QrCode
+                        id="qrcode"
+                        value={hash}
+                        size={100}
+                        fgColor="#000000"
+
+                    />
+                </Box>
+            </Collapse>
+        </Flex>
+
+
+    );
+}
+
 function CollectionCreatorList(props) {
+    const { ActiveWallect, account } = useEthers();
     const [result, setResult] = useState([]);
-    const content = props.content;     
+    const content = props.content;
     const url = "http://192.168.31.7:8000/api/nft_totally?id=" + content.ID;
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
-            .then(data => {                      
+            .then(data => {
                 setResult(data);
             })
             .catch(e => { console.log(e) })
@@ -88,7 +118,12 @@ function CollectionCreatorList(props) {
         <Box align="left" >
             <Flex>
                 <Image boxSize="300px" src={content.IpfsHash} />
-                {result.length == 0 ? "" : <TransactionBLock content={content} result={result} />}
+
+                <Box ml="2%">
+                    {result.length !== 0 ? <TransactionBLock content={content} result={result} /> : ""}
+                    {account !== undefined ? <DownloadQrCodeBtn account={account} ipfs={content.IpfsHash} /> : ""}
+                </Box>
+
             </Flex>
         </Box>
     );

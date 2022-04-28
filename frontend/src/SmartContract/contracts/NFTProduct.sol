@@ -21,7 +21,8 @@ contract NFTProduct {
 
     
     // 發布NFT
-    function DeployedNFT(string memory _name , uint256 _price , int128 _num , string memory _topic , int16 _roy , string memory _des,string memory _ipfs ,string memory _hash )  public   
+    function DeployedNFT(string memory _name , uint256 _price , int128 _num , 
+    string memory _topic , int16 _roy , string memory _des,string memory _ipfs ,string memory _hash )  public   
     {
         ID ++ ; 
         Name = _name; 
@@ -36,13 +37,15 @@ contract NFTProduct {
     }
     
     // 購買NFT
-    function BuyNFT(address payable _creator, string memory _ipfs , uint256 _price, int128 _id , string memory _hash ) payable  public {    
+    function BuyNFT(address payable _creator, string memory _ipfs ,
+         uint256 _price, int128 _id , string memory _hash ) payable  public {    
         payable(_creator).transfer(msg.value); // 向創作者轉帳
         emit BuySuccess(msg.sender,_creator , _ipfs , _price , _id , _hash );
     }
 
     // 轉賣NFT
-    function ResellNFT(address payable from, address payable _creator , int128 _nftid , uint128 _roy) payable public {   
+    function ResellNFT(address payable from, address payable _creator , 
+    int128 _nftid , uint128 _roy) payable public {   
         payable(from).transfer(msg.value / 100 * (100 - _roy )); // 向轉賣者轉帳
         payable(_creator).transfer(msg.value / 100 * _roy ) ; // 創作者抽成
         emit ResellSuccess(msg.sender,_creator ,from , msg.value ,_nftid , _roy );

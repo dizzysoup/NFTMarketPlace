@@ -7,9 +7,10 @@ import IPFS from "../../Images/IPFS.png";
 import lock from "../../Images/lock.png";
 import ganache from "../../Images/ganache.png";
 import databases from "../../Images/databases.png";
-import sha256 from "../../Components/CreateHash";
+import sha256 from "../../Components/Crypto";
 import { create } from "ipfs-http-client";
 import { useContractMethod } from "../../hook/NFTSmartContract";
+import { downloadQRCode } from "../../Components/Qrcode";
 
 
 const BackgroundStyle = {
@@ -98,19 +99,6 @@ async function InsertDataBase(formVal, address, ipfs) {
 
 }
 
-const downloadQRCode = (qrcode) => {
-    const canvas = document.getElementById("qrcode");
-    const pngUrl = canvas
-        .toDataURL("image/png")
-        .replace("image/png","image/octet-stream")
-    let downloadLink = document.createElement("a");
-    downloadLink.href = pngUrl
-    downloadLink.download = `${qrcode}.png`;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-}
-
 function CreateLoading(props) {
     const { state, send: deployedNFT } = useContractMethod("DeployedNFT");
     const context_val = useContext(InitContext);
@@ -164,7 +152,7 @@ function CreateLoading(props) {
                         </Flex>
                         <Flex flexDirection="column" align="center" w="20%" >
                             <Image boxSize={150} src={lock} />
-                            <Text {...FontStyle}>  資料加密 </Text>
+                            <Text {...FontStyle}>  資料雜湊 </Text>
                         </Flex>
                         <Flex flexDirection="column" align="center" w="20%" >
                             <Image boxSize={150} src={ganache} />

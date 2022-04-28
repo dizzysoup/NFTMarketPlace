@@ -1,6 +1,4 @@
 import jsQR from "jsqr";
-import React , { useContext} from "react";
-import {InitContext } from "../App";
 
 //QrCode 解碼
 async function QrCodeScan(e, context_val ){    
