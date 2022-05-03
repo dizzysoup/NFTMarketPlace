@@ -7,14 +7,14 @@ import { InitContext } from "../../App";
 import { useEthers } from "@usedapp/core";
 
 function PersonalProfile(props) {
-    const account = props.account;
+    const  account = props.account ; 
+    const etherBalance = props.etherBalance ; 
     const [name, setName] = useState();
     const [date, setDate] = useState();
     const [pfp, setPFP] = useState();
-    const contextData = useContext(InitContext);
-    const etherBalance = props.etherBalance;
+    const contextData = useContext(InitContext);    
     const connstr = 'http://192.168.31.7:8000/login?account=' + account;
-    useEffect(() => {
+    useEffect(() => {       
         fetch(connstr, { method: "GET" })
             .then(res => res.json())
             .then(data => {
@@ -32,9 +32,8 @@ function PersonalProfile(props) {
         alignItems="center"
     >
         {
-            pfp == null ?
-                <AddressIcon address={account} diameter={100} />
-                :
+            pfp == null && account !== undefined ?
+                <AddressIcon address={account} diameter={100} /> :
                 <Image w="150px" h="auto" borderRadius="full" src={pfp} />
         }
 
@@ -47,7 +46,7 @@ function PersonalProfile(props) {
             </Text>
 
             <Text fontSize="25px" mt="5.5">
-                {etherBalance && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
+                {etherBalance !== undefined && parseFloat(formatEther(etherBalance)).toFixed(3)} ETH
             </Text>
             <Text fontSize="20px" mt="5.5" color="gray.500" fontWeight="bold" > Joined {date} </Text>
         </Box>
@@ -60,15 +59,14 @@ function PersonalProfile(props) {
 
 
 function AccountLayout(props) {
-    const { activateBrowserWallet, account: useraccount } = useEthers()
-
+    const { activateBrowserWallet, account: useraccount } = useEthers()    
     const account = props.account;
     const etherBalance = props.etherBalance;
     const accountlink = "/AccountPage/Collection/" + account;
     const createlink = "/AccountPage/Create/" + account;
     const transactionlink = "/AccountPage/Transaction/" + account;
     const favoritelink = "/AccountPage/Favorite/" + account;
-    const reselllink = "/AccountPage/Resell/" + account ; 
+    const reselllink = "/AccountPage/Resell/" + account ;     
 
     return (
         <Box>

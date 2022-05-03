@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Text, Image, Flex, background } from "@chakra-ui/react";
 import AddressIcon from "../../Components/AddressIcon";
 import { useHistory } from "react-router-dom";
+import { rejects } from "assert";
 
 function CreatorBlock(props) {
     const [ borderbg , SetBorder ] = useState(-1);
@@ -49,6 +50,7 @@ function TopCreator() {
         fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(res => SetResult(res))
+            .catch(rejects => console.log("Creator is null "))
     }, []);
     return (
         <Box 

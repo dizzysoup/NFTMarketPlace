@@ -51,9 +51,8 @@ function NowSaling() {
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
-            .then(res => {                
-                setResult(res[0]);
-            })
+            .then(res => setResult(res[0]))
+            .catch(reject=> console.log("Now Saling is null "))
     }, [])
 
     return (

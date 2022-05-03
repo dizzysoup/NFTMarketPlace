@@ -1,27 +1,15 @@
 import React , {useContext , useState, useEffect } from "react";
 import { Text, Box, Image , Flex } from "@chakra-ui/react";
-import { getContract } from "../../hook/NFTSmartContract";
 import { InitContext } from "../../App";
+import { useHistory } from "react-router-dom";
 
 function SocialLayout() {
     const context_val = useContext(InitContext);
-    const [res , SetResult ] = useState([]);
-    const contract = getContract();
-    const eventOption = { fromBlock : 0 };
-   
-    useEffect(async()=>{
-        if (context_val.page === 1 ){
-            const event = await contract.getPastEvents('Success', eventOption);
-            let table = [];
-            for(let i =0; i< event.length ; i++){
-                const val = event[i].returnValues; // 合約回傳的emit
-                table.push(val)
-            }
-    
-            SetResult(table);
-        }
-     
-    },[context_val.page])
+    const [data , SetData ] = useState(null);
+
+    useEffect(()=>{            
+        SetData(context_val.layoutdata);           
+    },[context_val.layoutdata])
     return (
         <Box
             w='10%'
@@ -42,10 +30,8 @@ function SocialLayout() {
                 flexDirection="column"         
                 align="center"
             >
-                {
-                    res.map((res , index )=>{
-                        return <NFTBlock content = {res} />
-                    })
+                { data === null   ? "" :                
+                    <NFTBlock content = {data} />                    
                 }
             </Flex>
         </Box>
@@ -53,16 +39,16 @@ function SocialLayout() {
 }
 
 function NFTBlock(props){
-    const content = props.content;     
-    const context_val = useContext(InitContext);
-
+    const content = props.content;   
+    const path = "/NFTSocial/Community/" + content.id ;
+    const url = useHistory();
     return (
         <Box 
             m="3%"           
-            cursor = "pointer"
-            onClick={()=> { context_val.SetVal(content)}}
+            cursor = "pointer"    
+            onClick={()=>{ url.push(path) }}
         >
-            <Image boxSize="150px" borderRadius="3xl" src = {content.IpfsHash} />
+            <Image boxSize="150px" borderRadius="3xl" src = {content.ipfs} /> 
         </Box>
     );
 }

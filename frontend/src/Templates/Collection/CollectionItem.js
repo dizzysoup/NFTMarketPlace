@@ -47,7 +47,6 @@ async function Collection_SuccessCheck(account, eventstr){
         }    
         if(val == 1 ) resultatable.push(databasetable[0][i]);
     }      
-    console.log(resultatable)
     return resultatable ;   
 }
 

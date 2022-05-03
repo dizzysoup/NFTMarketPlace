@@ -29,8 +29,9 @@ class NFTProduct(models.Model):
     class Meta:
         db_table = "nft_t"
 
-class CommunicateContent(models.Model):
-    creator = models.CharField(max_length=128, blank=True, null = False) ## 發起討論室的address
+# 0xCommunity 會員討論室的留言資料庫
+class Communcation(models.Model):
+    nft_id  = models.IntegerField() ## 討論室id，同時也是該NFT產品的 ID
     member = models.CharField(max_length=128, blank=True, null = False) ## 留言者的address   
     content = models.TextField(null = False) ## 留言內容
     date  = models.DateField(auto_now_add=True , null = True ) ## 發布日期
@@ -112,11 +113,3 @@ class Royaltie(models.Model):
     class Meta :
         db_table = "royalties_t"
 
-# 會員卡資料表
-# 一個創作者所成立的 0xCommunity
-class MemberCard(models.Model):
-    creator = models.TextField(null = False ) # 創作者帳戶
-    nft_id = models.IntegerField() # 產品NFT_id
-    
-    class Meta : 
-        db_table = "membercard_t"

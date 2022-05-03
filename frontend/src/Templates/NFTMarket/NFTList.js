@@ -14,8 +14,7 @@ function NFTList(props) {
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
-            .then(res => {
-                console.log(res);                
+            .then(res => {                           
                 setResult(res);
             })
     }, [topic,status])

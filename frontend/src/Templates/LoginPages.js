@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
-import { Text, Button, Flex, Image, UnorderedList } from '@chakra-ui/react';
-import { Link, useHistory } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Text, Button, Flex, Image } from '@chakra-ui/react';
+import { Link  } from "react-router-dom";
 import MetaMaskImg from '../Images/metamask.png';
 import { InitContext } from '../App';
 import { useEthers } from "@usedapp/core";
@@ -8,10 +8,11 @@ import { useEthers } from "@usedapp/core";
 
 function LoginPage() {    
     const contextData = useContext(InitContext);
-    const { activateBrowserWallet, account } = useEthers()   
-    function LoginMetaMask() {
+    const { activateBrowserWallet , account } = useEthers();
+    function LoginMetaMask() {      
        contextData.SetLogin(1);
-       activateBrowserWallet();       
+       contextData.SetReLoad(1); // 避免二次讀取變數
+       activateBrowserWallet();
     }
     
     return (
@@ -30,18 +31,17 @@ function LoginPage() {
             >
                 <Text fontSize="4xl"> 
                     {
-                        account == undefined ? 
+                        contextData.loginstate === 0  ? 
                         " Sign in to your wallet " : "WelCome!"
                     }                   
                 </Text>
                 <Image type="image" src={MetaMaskImg} />
-                <Link to={ account == undefined ? "" : "AccountPage/Collection/" +account } >
-                    <Button  w="200px" h="60px" colorScheme="blue" onClick={LoginMetaMask} >
-                        { account == undefined ? "Login with MetaMask" : "Continue"}
+                <Link to={ contextData.loginstate === 0  ? "" : "AccountPage/Collection/" +account } >
+                    <Button  w="200px" h="60px" colorScheme="blue" onClick={() => LoginMetaMask()} >
+                        Login with MetaMask
                     </Button>                    
                 </Link>
-            </Flex>
-            <Text> { account } </Text>
+            </Flex>           
         </Flex>
     );
 }

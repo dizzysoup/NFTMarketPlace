@@ -19,8 +19,11 @@ async function QrCodeScan(e, context_val ){
 
       context.imageSmoothingEnabled = false ;
       context.drawImage(image , 0,0);
-      const imageData = context.getImageData(0,0,image.width,image.height);    
-      
+      const imageData = context.getImageData(0,0,image.width,image.height);         
+      if(imageData.data.length !== 360000 && imageData.data.length !== 160000) {
+        alert("此圖不屬於會員通行證");
+        return ;
+      }      
       code = jsQR(imageData.data, image.width , image.height);
       context_val.SetData(code.data)      
     }    

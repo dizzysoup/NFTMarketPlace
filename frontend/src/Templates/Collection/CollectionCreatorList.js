@@ -104,7 +104,7 @@ function DownloadQrCodeBtn(props) {
 function CollectionCreatorList(props) {
     const { ActiveWallect, account } = useEthers();
     const [result, setResult] = useState([]);
-    const content = props.content;
+    const content = props.content;    
     const url = "http://192.168.31.7:8000/api/nft_totally?id=" + content.ID;
     useEffect(() => {
         fetch(url, { method: "GET" })
@@ -121,7 +121,7 @@ function CollectionCreatorList(props) {
 
                 <Box ml="2%">
                     {result.length !== 0 ? <TransactionBLock content={content} result={result} /> : ""}
-                    {account !== undefined ? <DownloadQrCodeBtn account={account} ipfs={content.IpfsHash} /> : ""}
+                    {account === content.CreateHash ? <DownloadQrCodeBtn account={account} ipfs={content.IpfsHash} /> : ""}
                 </Box>
 
             </Flex>

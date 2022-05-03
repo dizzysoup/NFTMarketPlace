@@ -39,6 +39,7 @@ function FavoriteRank() {
         fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(res => SetResult(res))
+            .catch(reject => console.log("Favorite is null "))
     }, [])
 
     return (

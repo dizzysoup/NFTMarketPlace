@@ -52,9 +52,10 @@ function TopSales() {
 
     const url = "http://192.168.31.7:8000/api/hot_nft";
     useEffect(() => {
-        fetch(url, { method: "GET" })
+        fetch(url, { method: "GET" })           
             .then(res => res.json())
             .then(res => SetResult(res))
+            .catch(rejected=> console.log("Top Sales is null"))
     }, []);
 
     return (

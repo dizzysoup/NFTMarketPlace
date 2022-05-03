@@ -1,83 +1,55 @@
 /* eslint-disable react/jsx-pascal-case */
-import React  from "react"
-import { Text, Box, Flex } from "@chakra-ui/react";
+import React, { useContext } from "react"
+import { InitContext } from "../../App";
+import { Text, Box, Flex, Spacer } from "@chakra-ui/react";
 import Content_Box from "./Content_Box";
 import AddressIcon from "../../Components/AddressIcon";
 import Content_member from "./Content_member";
+import { useEthers } from "@usedapp/core";
 
-
-var title = [];
-function CreatorTitle(props) {
-    if (props.address.toString() === "home") {
-        title = (
-            <Text fontSize="5xl" mt="6%" ml="5%">
-                You Haven't Enter SocialRoom
-            </Text>
-        );
-    }
-    else {
-        title = (
-            <Flex>
-                <Box
-                    m="3"
-                    border="5px solid"
-                    w="10%"
-                    h="50%"
-                    p="1.5%"
-                >
-                    <AddressIcon address={props.address} diameter={100} />
-                </Box>
-                <Box w="90%" >
-                    <Flex mt="4%">
-                        <Text
-                            fontSize="5xl" > Welcome To  </Text>
-                        <Text ml="1%" fontSize="5xl" color="red.500"> {props.address.toString().slice(0, 6)} </Text>
-                        <Text ml="1%" fontSize="5xl"> Social Room   </Text>
-                    </Flex>
-                    <Text fontSize="4xl"> NFT Items : </Text>
-                </Box>
-            </Flex>
-        )
-    }
-
-    return title;
-}
-
-function Content_social(props) {
-    const address = props.match.params.address;
+function TopicLayout() {
+    const context_val = useContext(InitContext);
+    const data = context_val.val;
+    const { avtiveWallect , account } = useEthers();
     return (
         <Flex
-            bg="red.600"
-            w="100%"
-            h="100%"            
+            bg="gray.600"
+            h="94%"
+            w="250px"
+            flexDirection="column"
         >
+            <Box p="5%" color="white" fontWeight="bold" fontSize="2xl" >  {data.Name}  </Box>
+            <hr />
+            <Text color="gray.100" p="5%"> STAGE </Text>
+            <Box pt="3%" pl="6%" bg="gray.500" >
+                <Text color="gray.100" > # 討論區大廳</Text>
+            </Box>
+            <Spacer />
+            <Flex color="white" h="50px" bg = "gray.700" p ="5%" fontWeight="bold" align = "center" > 
+                <AddressIcon diameter = {30} address = {account}  />
+                <Text ml = "5%" >{ account.slice(0,9) } </Text>
+            </Flex>
+        </Flex>
+    );
+}
+
+
+function Content_social() {
+    return (
+        <Flex            
+            w="100%"
+            h="100%"
+        >
+            <TopicLayout />   
             <Box
                 w='80%'
                 h='100%'
                 bg='gray.400'
-            >
-                <Box
-                    mt="1%"
-                    border="5px solid"
-                    borderColor="gray.300"
-                    borderRadius="5px"
-                    ml="5%"
-                    h="30%"
-                    w="90%"
-                >
-                    <CreatorTitle address={address} />
-                </Box>             
-              
-                <Box 
-                    w = "95%" 
-                    h = "60%"                    
-                    ml ="1%"
-                >
-                    <Content_Box creator={address} />
-                </Box>              
+            >                
+                <Content_Box />              
             </Box>
-            <Box w="20%" h="100%" bg="gray.300">
-                <Content_member creator = { address } />
+            <Box w="20%" h="100%">
+                <Content_member />
             </Box>
         </Flex>
 

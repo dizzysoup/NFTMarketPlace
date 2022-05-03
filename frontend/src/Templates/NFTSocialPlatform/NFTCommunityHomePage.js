@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import {useHistory, useParams } from "react-router-dom";
 import { Box, Flex, Text, Button, Image, Input, Progress } from "@chakra-ui/react";
 import { InitContext } from "../../App";
 import { getContract } from "../../hook/NFTSmartContract";
@@ -10,6 +10,7 @@ import QrCodeScan from "../../Components/QrCodeScan";
 import { useEthers } from "@usedapp/core";
 import { CheckCircleIcon , CloseIcon } from "@chakra-ui/icons";
 
+
 const boxstyle = {
     bg: "gray.800",
     w: "80%",
@@ -19,6 +20,13 @@ const boxstyle = {
     borderWidth: "4px",
     borderStyle: "solid",
     pl: "5%"
+}
+
+const checkstyle = {
+    h:"100%",
+    justifyContent:"center",
+    align:"center",
+    flexDirection:"column"
 }
 
 // 0xCommunity 主要頁面
@@ -110,9 +118,13 @@ function QRLoginBlock() {
 
 //QRcode 驗證登入中
 function LoginCheck() {
+    const path = useHistory();
     const context_val = useContext(InitContext);
     const { astiveWallect, account } = useEthers();
     const [status, SetStatus] = useState(0);
+    const params = useParams();
+    const id = params.id ; 
+    
 
     useEffect(async () => {
         await wait(3000);
@@ -125,6 +137,16 @@ function LoginCheck() {
         return new Promise(resolve => setTimeout(() => resolve(), ms));
     };
 
+    const GoToPlatForm = () => {        
+        const LayoutData = {
+            "id" : id ,
+            "ipfs" : context_val.val.IpfsHash
+                       
+        };
+        context_val.SetLayoutData(LayoutData);
+        path.push("/NFTSocial/Community/" + id );
+    }
+
     switch (status) {
         case 2 :
             res = (<Box>
@@ -132,13 +154,15 @@ function LoginCheck() {
                 <Text fontSize="3xl" color="white" ml="12%"> 驗證成功 </Text>
                 <Text fontSize="1xl" color="gray.300" ml="15%"> NFT 創作者 WelCome! </Text>
                 <Progress mt="5%" value={100} />
+                <Button mt = "5%" onClick = {()=> GoToPlatForm() } > 進入平台 </Button>
             </Box>); break;
         case 1:
             res = (<Box>
                 <CheckCircleIcon color="green" w="200px" h="200px" />
-                <Text fontSize="3xl" color="white" ml="10%"> 驗證成功 </Text>
+                <Text fontSize="3xl" color="white" ml="15%"> 驗證成功 </Text>
                 <Text fontSize="1xl" color="gray.300" ml="15%"> NFT 會員 WelCome! </Text>
                 <Progress mt="5%" value={100} />
+                <Button mt = "5%" ml="20%" onClick = {()=> GoToPlatForm() } > 進入平台 </Button>
             </Box>); break;
         case 0:
             res = (<Box>
@@ -149,19 +173,20 @@ function LoginCheck() {
             </Box>);break;
         case -1 :
             
-            res = (<Box>
+            res = (<Flex {...checkstyle}>
                 <CloseIcon color="red" w="200px" h="200px" />
-                <Text fontSize="3xl" color="white" ml="10%"> 驗證失敗 </Text>
-                <Text fontSize="1xl" color="gray.300" ml="10%"> 請確認你的錢包位址以及會員通行證 </Text>
-                <Progress mt="5%" value={100} />
-            </Box>); break;
+                <Text fontSize="3xl" color="white"> 驗證失敗 </Text>
+                <Text fontSize="1xl" color="gray.300" > 請確認你的錢包位址以及會員通行證 </Text>               
+                <Button mt = "5%" onClick={()=> path.push("/NFTSocial/home/")}> 回首頁 </Button> : 
+            </Flex>); break;
     }
 
     return (
         <Box {...boxstyle}>
-            <Flex h="100%" justifyContent="center" align="center" flexDirection="column">
-                {res}
+            <Flex { ...checkstyle}>
+                {res}               
             </Flex>
+            
         </Box>);
 }
 

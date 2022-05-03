@@ -54,9 +54,9 @@ function Recommend() {
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
-            .then(res => {
-                SetResult(res)
-            })
+            .then(res => SetResult(res))
+            .catch(rejected => console.log(" Recommand is null "))
+            
     }, []);
 
     const settings = {

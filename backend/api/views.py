@@ -12,8 +12,8 @@ from django.db import connection
 from rest_framework.decorators import api_view 
 from rest_framework import status , viewsets
 from rest_framework.response import Response
-from api.serializers import NFTSerializer
-from api.models import NFTProduct , Resell , Collection , Transaction ,Royaltie, MemberCard
+from api.serializers import CommunitySerializer
+from api.models import NFTProduct , Resell , Collection , Transaction ,Royaltie, Communcation
 
 @api_view(['GET'])
 def nft_select(request):    
@@ -92,7 +92,6 @@ def nft_title(request):
 @api_view(['GET','POST'])                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 def nft_insert(request):
     result = request.data
-    print(result)
     NFTProduct.objects.create( 
         title = result["title"] , ipfs = result["ipfs"] , 
         topic = result["topic"] , description = result["description"],
@@ -171,42 +170,6 @@ def account(request):
                 for row in rows]
         finally :
             cursor.close()
-    return Response(result , status=status.HTTP_200_OK)
-
-# 討論區的搜尋
-@api_view(['GET'])
-def content_select(request): 
-    creator = request.GET.get("creator")
-    
-    query = '''
-        select *from communcation_t where creator = %s 
-    '''
-    try :
-        cursor = connection.cursor()
-        cursor.execute(query ,[str(creator)])
-        data = cursor.description      
-        rows = cursor.fetchall()
-        result =  [dict(zip([column[0] for column in data], row))
-                for row in rows]
-    finally :
-        cursor.close()
-        
-    return Response(result , status=status.HTTP_200_OK)
-
-@api_view(['GET' , 'POST']) 
-def content_insert(request):
-    result = request.data
-    creator = str(result['creator'])
-    content = str(result['content'])
-    member = str(result['member'])
-    try :
-        query = '''
-            insert into communcation_t(creator, content , member , date ) values (%s , %s , %s , now() )
-        '''
-        cursor = connection.cursor()
-        cursor.execute(query, [creator , content , member ])
-    finally :
-        cursor.close()
     return Response(result , status=status.HTTP_200_OK)
 
 # 交易紀錄
@@ -602,7 +565,6 @@ def hotnft(request):
     
     return Response(result , status = status.HTTP_200_OK)
 
-
 # 一個NFT的ETH總和
 @api_view(['GET'])
 def totallynft(request):
@@ -669,16 +631,41 @@ def resell(request):
 
     return Response(result , status = status.HTTP_200_OK)
 
-# 針對創作者的NFT產品撈取
-# 目的是為了撈取一個創作者所鑄造的NFT產品
-@api_view(['GET', 'POST'])
-def nft_creator(request):   
-    if request.method == 'GET' :
-        address = request.GET.get("address")
-        nft = NFTProduct.objects.filter(creator=address).order_by('date')
-        result = NFTSerializer(nft , many = True ).data 
-    elif request.method == 'POST' :
-        result = request.data        
-        MemberCard.objects.create(creator = result['creator'],nft_id = result["id"])
-    return Response(result, status = status.HTTP_200_OK)
 
+# 私人討論區_單一NFT項目的會員
+@api_view(['GET'])
+def CommunityMember(request):    
+    try :
+        id = request.GET.get("id")
+        query = '''
+            select distinct address from collection_t c  , nft_t n where c.id = n.id and c.id = %s
+        '''
+        cursor = connection.cursor()
+        cursor.execute(query , [id])
+        data = cursor.description 
+        rows = cursor.fetchall()
+        result = [dict(zip([column[0] for column in data],row))
+            for row in rows]
+    finally :
+        cursor.close()
+    return Response(result , status = status.HTTP_200_OK)
+
+
+# 私人討論區_討論平台
+@api_view(['GET', 'POST']) 
+def CommunityPlatform(request):
+    try :
+        cursor = connection.cursor()       
+        if request.method == 'POST' :
+            result = request.data            
+            Communcation.objects.create(nft_id = int(result["id"]), 
+            member = result["account"] , content = result["content"] , date = time.localtime)
+        elif request.method == 'GET' :
+            id = request.GET.get("id")
+            obj = Communcation.objects.filter(nft_id = id)
+            serializer = CommunitySerializer(obj , many=True)
+            result = serializer.data           
+
+    finally :
+        cursor.close()
+    return Response(result , status = status.HTTP_200_OK)

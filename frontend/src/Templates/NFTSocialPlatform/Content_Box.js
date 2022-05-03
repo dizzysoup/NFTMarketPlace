@@ -1,91 +1,98 @@
 /* eslint-disable react/jsx-pascal-case */
-import React, {  useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useEthers } from "@usedapp/core";
-import { Box, Flex, Input, Button } from "@chakra-ui/react";
-
-import Get_ContentBlock from "./Get_ContentBlock";
-
-function Content_Box(props) {
-    const { ConnectWallet, account } = useEthers();
-    const [count, setCount] = useState(0);
-    const creator = props.creator;
-
-    const insertstr = 'http://192.168.31.7:8000/api/social_insert';
-
-    let textInput = React.createRef();
+import { Box, Flex, Input, Text, Spacer } from "@chakra-ui/react";
+import { InitContext } from "../../App";
+import AddressIcon from "../../Components/AddressIcon";
 
 
-    let BtnClick = (e) => {
-        const text = textInput.current.value;
-        if (text !== '') {
-            setCount(count + 1);
-        }
-        const data = {
-            "creator": creator,
-            "content": text,
-            "member": account
-        }
+function ResponceBlock(props) {
+    const content = props.content
+    return (
+        <Box mt="2%" ml="2%" w="100%">
+            <Flex p="1%">
+                <AddressIcon diameter={50} address={content.member} />
+                <Box ml="2%" w="100%">
+                    <Flex alignItems="flex-end">
+                        <Text fontWeight="bold" > {content.member.slice(0, 9)} </Text>
+                        <Text ml="1%" > {content.date} </Text>
+                    </Flex>
+                    <Text mt="1%"> {content.content} </Text>
+                </Box>
+            </Flex>
+            <hr />
+        </Box>
+    );
+}
 
-        textInput.current.value = '';
-        if (text !== "") {
-            fetch(insertstr, {
-                method: 'POST',
+function Community() {
+    const [result, SetResult] = useState([]);
+    const context_val = useContext(InitContext);
+    useEffect(() => {
+        const api = 'http://192.168.31.7:8000/api/communityplatform?id=1';
+        fetch(api, { method: 'GET' })
+            .then(res => res.json())
+            .then(res => SetResult(res))
+    }, [context_val.reload]);
+    return (
+        <Flex h="100%" flexDirection="column" align="center" overflowY="auto" overflowX="hidden">
+            {
+                result.length === 0 ?
+                    <>
+                        <Spacer />
+                        <Text fontSize="4xl" fontWeight="bold"> 歡迎來到 </Text>
+                        <Text fontSize="4xl" fontWeight="bold"> {context_val.val.Name} </Text>
+                    </> :
+                    result.map((index, key) => {
+                        return <ResponceBlock content={index} />
+                    })
+            }
+
+        </Flex>
+    );
+}
+
+function Content_Box() {
+    const { ActiveWallect, account } = useEthers();
+    const context_val = useContext(InitContext);
+
+    const handleKeyDown = (event) => {
+        if (event.code === 'Enter' && event.target.value !== "") {
+            const val = event.target.value;
+            const api = "http://192.168.31.7:8000/api/communityplatform"
+            const data = {
+                "id": context_val.val.ID,
+                "content": val,
+                "account": account,
+            }
+            fetch(api, {
                 headers: {
-                    "Content-Type": "application/json ",
-                    "Accept": "application/json"
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
+                method: "POST",
                 body: JSON.stringify(data)
             })
-                .catch(error => console.log(error))
+                .then(res => {
+                    event.target.value = "";
+                    context_val.SetReLoad(context_val.reload + 1)
+                })
+                .catch(function (res) { console.log(res) })
         }
     }
 
-
-    const content_box =
-        (
-            <Box
-                border="5px solid"
-                borderColor="gray.300"
-                bg="gray.800"
-                borderRadius="5px"
-                ml="4%"
-                h="100%"
-                w="95%"
-            >
-                <Box
-                    h="90%"
-                    w="100%"
-                >
-                    <Get_ContentBlock creator={creator} count={count} />
-                </Box>
-                <Box w="100%" h="9%" >
-                    <Flex
-                        align="center"
-                        mr="1"
-                        ml="1"
-                    >
-                        <Input
-                            placeholder="Write Something "
-                            fontSize="4xl"
-                            bg="blue.800"
-                            h="100%"
-                            w="100%"
-                            mr="1"
-                            color="gray.400"
-                            ref={textInput}
-                            type="text"
-                        />
-                        <Button
-                            onClick={BtnClick}
-                        >
-                            Enter
-                        </Button>
-                    </Flex>
-                </Box>
+    return (
+        <Flex flexDirection="column" h="95%">
+            <Box bg="gray.400">
+                <Text fontSize="2xl" pt="2%" pl="5%" fontWeight="bold" color="white"> # 討論區大廳 </Text>
             </Box>
-        );
-
-    return content_box;
+            <hr />
+            <Community />
+            <Box p="2%">
+                <Input placeholder="傳送訊息到討論區大廳" color="black" size="md" onKeyDown={(e) => handleKeyDown(e)} />
+            </Box>
+        </Flex>
+    );
 }
 
 export default Content_Box

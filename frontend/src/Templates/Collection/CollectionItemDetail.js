@@ -57,12 +57,10 @@ function CollectionItemDetail(props) {
     const contextData = useContext(InitContext);
     const [result, setResult] = useState(null);
     const [show, setShow] = useState(false);
-    const content = props.content;
+    const content = props.content;   
     const { activeWallet, account } = useEthers();
     const url = 'http://192.168.31.7:8000/api/trans?id=' + content.id;
-
-    const hash = sha256(account + content.ipfs);
-
+    const hash = sha256(account + content.ipfs);    
     useEffect(() => {
         fetch(url, { method: "GET" })
             .then(res => res.json())
@@ -103,8 +101,7 @@ function CollectionItemDetail(props) {
                             <Text fontSize="1xl" > Buy from {content.date} </Text>
                             <Text fontSize="2xl" mt="1%" > Description </Text>
                         </Box>
-                        {account === undefined ?
-                            "" :
+                        {account === content.address ?                            
                             <Flex ml="10%">
                                 <Button onClick={() => setShow(!show)}> Member </Button>
                                 <Collapse in={show}>
@@ -120,7 +117,7 @@ function CollectionItemDetail(props) {
                                         />
                                     </Box>
                                 </Collapse>
-                            </Flex>
+                            </Flex> : "" 
                         }
                     </Flex>
 

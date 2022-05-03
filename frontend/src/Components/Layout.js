@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Flex, Button, Spacer , Box } from "@chakra-ui/react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { InitContext } from '../App';
 import { useEthers } from '@usedapp/core';
 
@@ -30,8 +30,16 @@ function ProfileComponent() {
   );
 }
 
-function LoginBtn() {
+function LoginBtn() {  
+  const { activeWallect , account } = useEthers();
   const contextData = useContext(InitContext);
+  const path = useHistory();
+  useEffect(()=>{   
+    if(contextData.reload == 1 ) {
+      contextData.SetReLoad(-1);
+    }else 
+      path.push("/LoginPage");
+  }, [account])
 
   return contextData.loginstate === 0 ? (
     <Link to="/LoginPage">
