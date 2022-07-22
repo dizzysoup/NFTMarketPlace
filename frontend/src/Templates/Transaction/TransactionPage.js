@@ -42,6 +42,7 @@ function TransactionPage(props) {
             w="100%"
             h="100%"
             bg="gray.600"
+            position="fixed"
             mt="1%"           
         >
             <Box align = "center" >

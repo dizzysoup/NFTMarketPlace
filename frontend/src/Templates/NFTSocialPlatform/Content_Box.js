@@ -27,9 +27,9 @@ function ResponceBlock(props) {
 
 function Community() {
     const [result, SetResult] = useState([]);
-    const context_val = useContext(InitContext);
+    const context_val = useContext(InitContext);    
     useEffect(() => {
-        const api = 'http://192.168.31.7:8000/api/communityplatform?id=1';
+        const api = 'http://192.168.31.7:8000/api/communityplatform?id=' + context_val.val.ID;
         fetch(api, { method: 'GET' })
             .then(res => res.json())
             .then(res => SetResult(res))

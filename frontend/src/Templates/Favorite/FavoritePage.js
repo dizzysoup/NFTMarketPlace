@@ -41,7 +41,7 @@ function FavoritePage(props){
                 {
                     result == null ? "":
                     result.map((res, index) => {
-                        return <Box w = "80%" h = "320px">
+                        return <Box w = "270px" h = "320px">
                             <NFTTitleBlock key = {index}  content = {res} contextdata = { conxtdata }/>
                         </Box>
                     })

@@ -425,8 +425,9 @@ def personal_favorite(request):
             cursor = connection.cursor()
             account = request.GET.get("account")
             query = '''
-                select *from favorite_t f , nft_t n 
-                where f.address = %s and f.nft_id = n.id 
+                select *from favorite_t f , 
+                (select n.* , count(*) as sale from transaction_t t , nft_t n where `event` = 'sale' and t.nft_id = n.id group by nft_id) s
+                where f.address = %s and f.nft_id = s.id 
             '''
             cursor.execute(query , [account])
             data = cursor.description      
@@ -638,7 +639,7 @@ def CommunityMember(request):
     try :
         id = request.GET.get("id")
         query = '''
-            select distinct address from collection_t c  , nft_t n where c.id = n.id and c.id = %s
+            select distinct address from collection_t c  , nft_t n where c.nft_id = n.id and c.nft_id = %s
         '''
         cursor = connection.cursor()
         cursor.execute(query , [id])

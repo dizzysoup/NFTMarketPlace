@@ -22,6 +22,7 @@ function NFTTitleBlock(props) {
    
     const url = "http://192.168.31.7:8000/api/favorite_count/?id=" + id;
     const hearturl = "http://192.168.31.7:8000/api/favorite_chk/?id=" + id +"&&account=" + account ;
+
     useEffect(() => {
         fetch(hearturl , {method:"GET"})
         .then(res => res.json())
@@ -150,7 +151,7 @@ function NFTTitleBlock(props) {
                               
                     <Text fontSize="2xl" ml="2.5%"> {count} </Text>
                     <Spacer />
-                    <Text fontSize="2xl" mr = "10%"> 剩餘 : { content.num - content.saled} </Text> 
+                    <Text fontSize="2xl" mr = "10%"> 剩餘 : { content.num - content.sale} </Text> 
                 </Flex>
             </Box>
         </label>

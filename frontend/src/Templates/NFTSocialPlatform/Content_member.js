@@ -20,7 +20,8 @@ function CreatorBlock(props){
 
 function MemberBlock(){
     const [ member , SetMember ] = useState([]);
-    const api = "http://192.168.31.7:8000/api/communitymember?id=1";
+    const context_val = useContext(InitContext);
+    const api = "http://192.168.31.7:8000/api/communitymember?id=" + context_val.val.ID;
     
     useEffect(()=>{
         fetch(api , { method : "GET"})
